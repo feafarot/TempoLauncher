@@ -1,0 +1,22 @@
+{
+  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "jsx": "react",
+    "noUnusedLocals": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "paths": {},
+    "plugins": [
+      { "name": "typescript-tslint-plugin" }
+    ]
+  },
+}
