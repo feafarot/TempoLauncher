@@ -3,10 +3,12 @@ export interface SearchRequest {
   prefix?: string;
 }
 
+export interface DataItem {
+  display?: string;
+  value?: string;
+  icon?: string;
+}
+
 export interface SearchResponse {
-  items: {
-    display?: string;
-    value?: string;
-    icon?: string;
-  }[];
+  items: DataItem[];
 }

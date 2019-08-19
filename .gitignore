@@ -92,3 +92,8 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+
+# C# related
+bin/
+obj/

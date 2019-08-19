@@ -7,6 +7,7 @@ import { windowConfig } from '../config';
 import { Configurator } from './configurator';
 import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
+import { SearchResponse, DataItem } from 'shared/contracts/search';
 
 const useStyles = makeStyles({
   root: { },
@@ -23,9 +24,9 @@ const useStyles = makeStyles({
 export function useQuerying() {
   const [query, setQuery] = useState('');
   const [pluginKey, setPluginKey] = useState<Option<string>>(null);
-  const [result, setResult] = useState<string[]>([]);
+  const [result, setResult] = useState<DataItem[]>([]);
   const runSearch = useApiAction(actions.search, (resp) => {
-    setResult(resp.items.map(x => x.display as string));
+    setResult(resp.items);
   });
 
   const handleChange = (actionInfo: QueryInputActionInfo) => {
@@ -61,7 +62,11 @@ export const Root: React.FC = () => {
           <QueryInput query={query} onChange={handleChange} />
         </div>
       </Paper>
-      <ResultsList children={result.map(x => <span>{x}</span>)} />
+      <ResultsList children={result.map(x =>
+        <div key={x.value}>
+          <img src={`data:image/png;base64,${x.icon}`} />
+          <span>{x.display}</span>
+        </div>)} />
     </div>
   </Configurator>;
 };

@@ -46,6 +46,8 @@ function createMainWindow() {
   return window;
 }
 
+app.commandLine.appendSwitch('remote-debugging-port', '9223');
+
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
@@ -63,7 +65,7 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  initializeApi();
+  console.log(app.getAppPath());
   mainWindow = createMainWindow();
 });
-
-initializeApi();
