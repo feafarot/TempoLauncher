@@ -12,9 +12,32 @@
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/src/icon-extarctor-tool/bin/Debug/netcoreapp2.2/IconExtarctor.dll",
       "args": [
-        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/Component Services.lnk",
-        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/Computer Management.lnk",
-        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/dfrgui.lnk"
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/Component Services.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/Computer Management.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/dfrgui.lnk"
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Nahimic 2+ Audio Driver/Nahimic 2+ Audio Driver.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Node.js/Node.js command prompt.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Node.js/Node.js.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Node.js/Uninstall Node.js.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/OBS Studio/OBS Studio (64bit).lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/OBS Studio/Uninstall.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Overwatch/Overwatch.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Path of Building/Path of Building.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Path of Building/Uninstall Path of Building.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Rico Suter/NSwagStudio.lnk",
+        // "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Skype/Skype.lnk"
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Administrative Tools/Performance Monitor.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp/SteelSeries Engine 3.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Steam/Steam.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/System Tools/Task Manager.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/Documentation.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/Release Notes.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/VideoLAN Website.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/VLC media player - reset preferences and cache files.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/VLC media player skinned.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/VideoLAN/VLC media player.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/Accessories/System Tools/Character Map.lnk",
+        "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/GOG.com/GOG Galaxy/GOG Galaxy.lnk"
       ],
       "cwd": "${workspaceFolder}/src/icon-extarctor-tool",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -36,17 +59,17 @@
         "dev"
       ],
       "autoAttachChildProcesses": true,
-      "internalConsoleOptions": "openOnFirstSessionStart",
+      //"internalConsoleOptions": "openOnFirstSessionStart",
       "console": "integratedTerminal",
-      "timeout": 30000
+      "timeout": 50000
     },
     {
       "name": "Electron: Renderer [Attach]",
       "type": "chrome",
       "request": "attach",
-      "port": 9223,
+      "port": 9228,
       "webRoot": "${workspaceFolder}",
-      "timeout": 30000
+      "timeout": 50000
     }
   ],
   "compounds": [

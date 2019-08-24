@@ -8,6 +8,7 @@ import { Configurator } from './configurator';
 import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
 import { SearchResponse, DataItem } from 'shared/contracts/search';
+import { ResultListItem } from './result-list-item';
 
 const useStyles = makeStyles({
   root: { },
@@ -17,6 +18,7 @@ const useStyles = makeStyles({
     '-webkit-app-region': 'drag'
   },
   query: {
+    display: 'inline-block',
     '-webkit-app-region': 'no-drag'
   }
 });
@@ -24,9 +26,9 @@ const useStyles = makeStyles({
 export function useQuerying() {
   const [query, setQuery] = useState('');
   const [pluginKey, setPluginKey] = useState<Option<string>>(null);
-  const [result, setResult] = useState<DataItem[]>([]);
+  const [result, setResult] = useState<{ items: DataItem[], calc?: string }>({ items: [] });
   const runSearch = useApiAction(actions.search, (resp) => {
-    setResult(resp.items);
+    setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
 
   const handleChange = (actionInfo: QueryInputActionInfo) => {
@@ -60,13 +62,11 @@ export const Root: React.FC = () => {
       <Paper className={classes.mainFrame}>
         <div className={classes.query}>
           <QueryInput query={query} onChange={handleChange} />
+          <span>{result.calc}</span>
         </div>
       </Paper>
-      <ResultsList children={result.map(x =>
-        <div key={x.value}>
-          <img src={`data:image/png;base64,${x.icon}`} />
-          <span>{x.display}</span>
-        </div>)} />
+      <ResultsList children={result.items.map(x =>
+        <ResultListItem key={x.value} icon={x.icon} matches={x.matches} value={x.display} />)} />
     </div>
   </Configurator>;
 };

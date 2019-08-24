@@ -50,12 +50,19 @@ namespace IconExtarctor
 
             string base64Icon;
             //Path.GetFullPath(path);
-            using (var icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(target)))
-            using (var bmp = icon.ToBitmap())
-            using (var ms = new MemoryStream())
+            try
             {
-                bmp.Save(ms, ImageFormat.Png);
-                base64Icon = Convert.ToBase64String(ms.ToArray());
+                using (var icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(target)))
+                using (var bmp = icon.ToBitmap())
+                using (var ms = new MemoryStream())
+                {
+                    bmp.Save(ms, ImageFormat.Png);
+                    base64Icon = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                base64Icon = "--FNF--" ;
             }
 
             return base64Icon;
@@ -69,7 +76,9 @@ namespace IconExtarctor
             }
 
             var linkObj = Shortcut.ReadFromFile(path);
-            var target = linkObj.ExtraData.EnvironmentVariableDataBlock.TargetUnicode;
+            var target = linkObj?.LinkTargetIDList?.Path
+                ?? linkObj?.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode
+                ?? linkObj?.LinkInfo?.LocalBasePath;
             if (Path.GetExtension(target) == ".msc")
             {
                 return path;

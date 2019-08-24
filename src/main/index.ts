@@ -3,6 +3,8 @@ import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initializeApi } from './api';
 
+app.commandLine.appendSwitch('remote-debugging-port', '9228');
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
@@ -46,8 +48,6 @@ function createMainWindow() {
   return window;
 }
 
-app.commandLine.appendSwitch('remote-debugging-port', '9223');
-
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
@@ -66,6 +66,5 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   initializeApi();
-  console.log(app.getAppPath());
   mainWindow = createMainWindow();
 });

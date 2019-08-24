@@ -11,3 +11,7 @@ export function fitContent() {
     window.resizeTo(window.innerWidth, el.offsetHeight);
   }
 }
+
+export function escapeRegExp(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
