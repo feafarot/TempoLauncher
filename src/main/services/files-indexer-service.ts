@@ -26,22 +26,25 @@ export class FileIndexerService {
     const files = await globby(this.pattergs);
     const icons = await extractIcons(files);
     const preparedCache = files
-      .map<FileInfo>((x, i) => ({
-        fullPath: x,
-        fileName: basename(x).replace(/\.[^/.]+$/, ''),
-        dirName: dirname(x),
-        extension: extname(x),
-        base64Icon: icons[i]
-      }))
+      .map<FileInfo>((x, i) => {
+        const ext = extname(x);
+        return {
+          fullPath: x,
+          fileName: basename(x).replace(new RegExp(`\\${ext}$`), ''),
+          dirName: dirname(x),
+          extension: ext,
+          base64Icon: icons[i]
+        };
+      })
       .filter(x => x.base64Icon !== fileNotFoundIconResponse);
     this.cacheStorage.set('files', preparedCache);
     this._indexingInProgress = false;
     return preparedCache;
   }
 
-  async getFiles() {
+  async getFiles(forceReindex: boolean = false) {
     let files = this.cacheStorage.get('files');
-    if (files == null || files.length == 0) {
+    if (forceReindex || files == null || files.length == 0) {
       files = await this.indexFiles();
     }
 

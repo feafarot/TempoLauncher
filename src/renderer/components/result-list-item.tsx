@@ -28,12 +28,12 @@ function highlight(value: string, matches?: TextMatch[], markClass?: string): Re
       parts.push(<span>{pre}</span>);
     }
 
-    const highlighted = value.slice(start, end);
+    const highlighted = value.slice(start, end + 1);
     parts.push(<span className={markClass || 'marked'}>{highlighted}</span>);
-    lastIndex = end;
+    lastIndex = end + 1;
   }
 
-  if (lastIndex < value.length - 1) {
+  if (lastIndex < value.length) {
     const finalPart = value.slice(lastIndex);
     parts.push(<span>{finalPart}</span>);
   }

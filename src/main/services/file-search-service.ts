@@ -1,17 +1,34 @@
 import { escapeRegExp } from 'shared/utils';
 import { FileIndexerService, fileIndexer } from './files-indexer-service';
 import { FileInfo } from 'main/storage/cache';
+import { TextMatch } from 'shared/utils/util-types';
+
+function optimizeMathces(matches: TextMatch[]) {
+  return matches.reduce<TextMatch[]>(
+    (s, [cStart, cEnd]) => {
+      if (s.length > 0) {
+        const [start, end] = s[s.length - 1];
+        if (end + 1 == cStart) {
+          s[s.length - 1] = [start, cEnd];
+          return s;
+        }
+      }
+
+      s.push([cStart, cEnd]);
+      return s;
+    },
+    []);
+}
 
 function getUpperCaseNotationMatches(query: string, value: string) {
-  const regexEscapedQuery = escapeRegExp(query);
-  const queryChars = regexEscapedQuery.split('').map(x => x.toUpperCase());
+  const queryChars = query.split('').map(x => escapeRegExp(x).toUpperCase());
   const asUpperCaseMather = new RegExp(queryChars.join('.*'), 'g');
   if (asUpperCaseMather.test(value)) {
     let processingValue = value;
     let baseIndex = 0;
     const highlightedParts = queryChars
       .map(x => new RegExp(x, 'g'))
-      .reduce<[number, number][]>(
+      .reduce<TextMatch[]>(
         (s, crx) => {
           let match = crx.exec(processingValue);
           s.push([baseIndex + match!.index, baseIndex + match!.index]);
@@ -20,7 +37,7 @@ function getUpperCaseNotationMatches(query: string, value: string) {
           return s;
         },
         []);
-    return highlightedParts;
+    return optimizeMathces(highlightedParts);
   }
 
   return [];
@@ -53,12 +70,12 @@ export class FileSearchService {
 
   async search(query: string) {
     return (await this.filesIndex.getFiles())
-      .map(x => {
+      .map<SearchMatch>(x => {
         const matches = getFuzzyMatches(query, x.fileName);
         return {
           fileInfo: x,
           matches: matches
-        } as SearchMatch;
+        };
       })
       .filter(x => x.matches.length > 0);
   }

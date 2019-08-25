@@ -1,6 +1,6 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Action } from 'shared/contracts/helpers';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useLayoutEffect } from 'react';
 import { DataPacket } from 'shared/contracts/abstract';
 
 const NullId = -1;
@@ -37,40 +37,66 @@ function execAction<TRq, TRp>(action: Action<TRq, TRp>, request: TRq) {
   return promise;
 }
 
+// export function useApiAction<TRq, TRp>(action: Action<TRq, TRp>, handler: (response: TRp) => void) {
+//   //let [currentId, setCurrentId] = useState(NullId);
+//   // useEffect(
+//   //   () => {
+//   //     function responseHandler(e: IpcRendererEvent, contractResponse: DataPacket<TRp>) {
+//   //       if (currentId === contractResponse.id) {
+//   //         handler(contractResponse.data);
+//   //         setCurrentId(NullId);
+//   //       }
+//   //     }
+
+//   //     ipcRenderer.on(action.responseId, responseHandler);
+
+//   //     return () => {
+//   //       ipcRenderer.removeListener(action.responseId, responseHandler);
+//   //     };
+//   //   },
+//   //   [action, currentId]);
+
+//   return (request: TRq) => {
+//     let currentId = NullId;
+//     function responseHandler(e: IpcRendererEvent, contractResponse: DataPacket<TRp>) {
+//       if (currentId === contractResponse.id) {
+//         handler(contractResponse.data);
+//         currentId = NullId;
+//       }
+
+//       ipcRenderer.removeListener(action.responseId, responseHandler);
+//     }
+
+//     ipcRenderer.on(action.responseId, responseHandler);
+
+//     const packet = createPacket(request);
+//     currentId = packet.id;
+//     ipcRenderer.send(action.requestId, packet);
+//   };
+// }
+
 export function useApiAction<TRq, TRp>(action: Action<TRq, TRp>, handler: (response: TRp) => void) {
-  //let [currentId, setCurrentId] = useState(NullId);//zz
-  // useEffect(
-  //   () => {
-  //     function responseHandler(e: IpcRendererEvent, contractResponse: DataPacket<TRp>) {
-  //       if (currentId === contractResponse.id) {
-  //         handler(contractResponse.data);
-  //         setCurrentId(NullId);
-  //       }
-  //     }
-
-  //     ipcRenderer.on(action.responseId, responseHandler);
-
-  //     return () => {
-  //       ipcRenderer.removeListener(action.responseId, responseHandler);
-  //     };
-  //   },
-  //   [action, currentId]);
-
-  return (request: TRq) => {
-    let currentId = NullId;
-    function responseHandler(e: IpcRendererEvent, contractResponse: DataPacket<TRp>) {
-      if (currentId === contractResponse.id) {
-        handler(contractResponse.data);
-        currentId = NullId;
+  let [currentId, setCurrentId] = useState(NullId);
+  useLayoutEffect(
+    () => {
+      function responseHandler(e: IpcRendererEvent, contractResponse: DataPacket<TRp>) {
+        if (currentId === contractResponse.id) {
+          handler(contractResponse.data);
+          setCurrentId(NullId);
+        }
       }
 
-      ipcRenderer.removeListener(action.responseId, responseHandler);
-    }
+      ipcRenderer.on(action.responseId, responseHandler);
 
-    ipcRenderer.on(action.responseId, responseHandler);
+      return () => {
+        ipcRenderer.removeListener(action.responseId, responseHandler);
+      };
+    },
+    [currentId]);
 
+  return (request: TRq) => {
     const packet = createPacket(request);
-    currentId = packet.id;
+    setCurrentId(packet.id);
     ipcRenderer.send(action.requestId, packet);
   };
 }
