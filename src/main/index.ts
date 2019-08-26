@@ -1,21 +1,23 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Tray } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initializeApi } from './api';
+import { resolve } from 'path';
 
 app.commandLine.appendSwitch('remote-debugging-port', '9228');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
+const icon = resolve(__static, 'icon.v3.png');
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null;
-
+let tray: Tray | null = null;
 function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: { nodeIntegration: true },
     frame: false,
     useContentSize: true,
-    transparent: true
+    transparent: true,
+    icon: icon
   });
 
   if (isDevelopment) {
@@ -43,6 +45,21 @@ function createMainWindow() {
     setImmediate(() => {
       window.focus();
     });
+  });
+
+  // tslint:disable-next-line: no-any
+  window.on('minimize', (e: any) => {
+    e.preventDefault();
+    window.hide();
+  });
+
+  window.on('blur', () => {
+    //window.hide();
+  });
+
+  tray = new Tray(icon);
+  tray.on('click', () => {
+    window.isVisible() ? window.hide() : window.show();
   });
 
   return window;
