@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.3.1",
+    "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.3.0",
     "electron-store": "^4.0.0",
     "globby": "^10.0.1",
@@ -29,7 +30,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "rxjs": "^6.5.2",
-    "source-map-support": "^0.5.13"
+    "source-map-support": "^0.5.13",
+    "typeface-roboto": "^0.0.75"
   },
   "devDependencies": {
     "@types/mathjs": "^6.0.1",

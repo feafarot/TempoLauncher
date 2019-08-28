@@ -3,7 +3,6 @@ import { InputBase } from '@material-ui/core';
 
 export enum QueryInputActionType {
   QueryChange,
-  Submit,
   SelectMode
 }
 
@@ -20,12 +19,12 @@ type QueryInputProps = {
 export const QueryInput: React.FC<QueryInputProps> = ({ onChange, query }) => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const inputQuery = (e.target as HTMLInputElement).value;
-    if (e.keyCode === 13) { // Enter
-      onChange({ type: QueryInputActionType.Submit, query: inputQuery });
-    }
-
     if (e.keyCode === 9) { // Tab
       onChange({ type: QueryInputActionType.SelectMode, query: inputQuery });
+      e.preventDefault();
+    }
+
+    if (e.keyCode === 38 || e.keyCode === 40) {
       e.preventDefault();
     }
   };

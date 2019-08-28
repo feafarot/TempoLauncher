@@ -17,7 +17,8 @@ function createMainWindow() {
     frame: false,
     useContentSize: true,
     transparent: true,
-    icon: icon
+    icon: icon,
+    width: 600
   });
 
   if (isDevelopment) {
