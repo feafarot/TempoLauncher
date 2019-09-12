@@ -33,9 +33,10 @@ const useStyles = makeStyles({
 });
 
 export function useQuerying() {
+  const defaultState = { items: [] };
   const [query, setQuery] = useState('');
   const [pluginKey, setPluginKey] = useState<Option<string>>(null);
-  const [result, setResult] = useState<{ items: DataItem[], calc?: string }>({ items: [] });
+  const [result, setResult] = useState<{ items: DataItem[], calc?: string }>(defaultState);
   const runSearch = useApiAction(actions.search, (resp) => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
@@ -53,7 +54,17 @@ export function useQuerying() {
     }
   };
 
-  return [query, pluginKey, handleChange, result, () => setPluginKey(null)] as const;
+  return [
+    query,
+    pluginKey,
+    handleChange,
+    result,
+    () => {
+      setPluginKey(null);
+      setResult(defaultState);
+      setQuery('');
+    }
+  ] as const;
 }
 
 function useSelectionControl(items: DataItem[]) {
@@ -66,7 +77,7 @@ function useSelectionControl(items: DataItem[]) {
         }
       },
       handleDown: () => {
-        if (items.length > 0 && selected <= items.length - 1) {
+        if (items.length > 0 && selected < items.length - 1) {
           setSelected(s => s + 1);
         }
       }
@@ -76,8 +87,13 @@ function useSelectionControl(items: DataItem[]) {
 
 export const Root: React.FC = () => {
   const classes = useStyles();
-  const [query, pluginKey, handleChange, result, resetPlugin] = useQuerying();
+  const [query, pluginKey, handleChange, result, resetData] = useQuerying();
   const [handlers, selectedIndex] = useSelectionControl(result.items);
+  const requestLaunch = useApiAction(actions.launch, (resp) => {
+    if (resp.success) {
+      resetData();
+    }
+  });
   return <Configurator>
     <div className={classes.root} onKeyDown={e => {
       switch (e.keyCode) {
@@ -88,6 +104,8 @@ export const Root: React.FC = () => {
           handlers.handleDown();
           break;
         case 13: // Enter
+          const targetId = result.items[selectedIndex].id;
+          requestLaunch({ targetId });
           // Perform submit
           break;
       }

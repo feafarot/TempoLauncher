@@ -1,14 +1,15 @@
-import { escapeRegExp } from 'shared/utils';
-import { FileIndexerService, fileIndexer } from './files-indexer-service';
-import { FileInfo } from 'main/storage/cache';
 import { TextMatch } from 'shared/utils/util-types';
+import { escapeRegExp } from 'shared/utils';
+import { DataOperatorFetchOptions, SearchableItem, DataOperatorsRegistry } from 'main/data-providers/data-operator';
+import { dataOperatorsRegistry } from 'main/data-providers/providers-registry';
+import { searchIdHelper } from './search-id-helper';
 
 function optimizeMathces(matches: TextMatch[]) {
   return matches.reduce<TextMatch[]>(
     (s, [cStart, cEnd]) => {
       if (s.length > 0) {
         const [start, end] = s[s.length - 1];
-        if (end + 1 == cStart) {
+        if (end + 1 === cStart) {
           s[s.length - 1] = [start, cEnd];
           return s;
         }
@@ -30,7 +31,7 @@ function getUpperCaseNotationMatches(query: string, value: string) {
       .map(x => new RegExp(x, 'g'))
       .reduce<TextMatch[]>(
         (s, crx) => {
-          let match = crx.exec(processingValue);
+          const match = crx.exec(processingValue);
           s.push([baseIndex + match!.index, baseIndex + match!.index]);
           processingValue = processingValue.substr(match!.index + 1);
           baseIndex += match!.index + 1;
@@ -50,36 +51,45 @@ function getFuzzyMatches(query: string, value: string) {
   }
 
   const regex = new RegExp(escapeRegExp(query), 'gi');
-  const result: [number, number][] = [];
+  const result: TextMatch[] = [];
 
   let match: RegExpExecArray | null = null;
-  while (match = regex.exec(value)) {
+  while ((match = regex.exec(value))) {
     result.push([match.index, regex.lastIndex - 1]);
   }
 
   return result;
 }
 
-interface SearchMatch {
-  fileInfo: FileInfo;
-  matches: [number, number][];
+export interface SearchMatch extends SearchableItem {
+  id: string;
+  matches: TextMatch[];
 }
 
-/** @deprecated */
-export class FileSearchService {
-  constructor(private filesIndex: FileIndexerService) { }
+export interface SearchOptions {
+  dataProviderOptions?: DataOperatorFetchOptions;
+}
 
-  async search(query: string) {
-    return (await this.filesIndex.getFiles())
-      .map<SearchMatch>(x => {
-        const matches = getFuzzyMatches(query, x.fileName);
-        return {
-          fileInfo: x,
-          matches: matches
-        };
+export class SearchService {
+  constructor(private providers: DataOperatorsRegistry) { }
+
+  async search(query: string, options?: SearchOptions) {
+    const dataProviderOptions = (options && options.dataProviderOptions) || undefined;
+    const resultsCollection = await Promise.all(this.providers.map(x => x.provider.fetch(dataProviderOptions).then(r => ({ provider: x.name, data: r }))));
+    const searchResults = resultsCollection
+      .flatMap(x => {
+        return x.data.map<SearchMatch>(item => {
+          const matches = getFuzzyMatches(query, item.displayText);
+          return {
+            ...item,
+            id: searchIdHelper.buildId(x.provider, item.value),
+            matches: matches
+          };
+        });
       })
       .filter(x => x.matches.length > 0);
+    return searchResults;
   }
 }
 
-export const fileSearchService = new FileSearchService(fileIndexer);
+export const searchService = new SearchService(dataOperatorsRegistry);

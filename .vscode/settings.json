@@ -1,4 +1,5 @@
 {
     "typescript.preferences.quoteStyle": "single",
-    "javascript.preferences.quoteStyle": "single"
+    "javascript.preferences.quoteStyle": "single",
+    "deepcode.review.results.hideInformationIssues": false
 }

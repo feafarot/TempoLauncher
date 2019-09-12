@@ -9,12 +9,26 @@ const fileNotFoundIconResponse = '--FNF--';
 
 export class FileIndexerService {
   private _indexingInProgress = false;
+  private memoryFilesCache: FileInfo[] | null = null;
 
   constructor(private cacheStorage: AppCacheStorage, private settingsStorage: SettingsStorage) {
   }
 
   private get pattergs() {
     return this.settingsStorage.get('searchPatterms').map(x => `${x.pattern}*.{${x.extensions}}`);
+  }
+
+  private updateCache(data: FileInfo[]) {
+    this.cacheStorage.set('files', data);
+    this.memoryFilesCache = data;
+  }
+
+  private getFromCache() {
+    if (!this.memoryFilesCache) {
+      this.memoryFilesCache = this.cacheStorage.get('files');
+    }
+
+    return this.memoryFilesCache;
   }
 
   get indexingInProgress() {
@@ -37,14 +51,14 @@ export class FileIndexerService {
         };
       })
       .filter(x => x.base64Icon !== fileNotFoundIconResponse);
-    this.cacheStorage.set('files', preparedCache);
+    this.updateCache(preparedCache);
     this._indexingInProgress = false;
     return preparedCache;
   }
 
   async getFiles(forceReindex: boolean = false) {
-    let files = this.cacheStorage.get('files');
-    if (forceReindex || files == null || files.length == 0) {
+    let files = this.getFromCache();
+    if (forceReindex || files == null || files.length === 0) {
       files = await this.indexFiles();
     }
 

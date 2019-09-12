@@ -23,10 +23,6 @@ export const QueryInput: React.FC<QueryInputProps> = ({ onChange, query }) => {
       onChange({ type: QueryInputActionType.SelectMode, query: inputQuery });
       e.preventDefault();
     }
-
-    if (e.keyCode === 38 || e.keyCode === 40) {
-      e.preventDefault();
-    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +32,11 @@ export const QueryInput: React.FC<QueryInputProps> = ({ onChange, query }) => {
   return <InputBase
     inputProps={{ 'aria-label': 'naked' }}
     autoFocus
+    onKeyDown={(e) => {
+      if (e.keyCode === 38 || e.keyCode === 40) {
+        e.preventDefault();
+      }
+    }}
     onKeyPress={handleKeyPress}
     onChange={handleChange}
     value={query || ''} />;

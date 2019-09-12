@@ -2,20 +2,16 @@ import Store from 'electron-store';
 import { defaultSettings, AppSettingsStore, SettingsStorage } from './settings';
 import { defaultCache, AppCacheStore, AppCacheStorage } from './cache';
 
-type AsStore<T> = T[keyof T];
-
-const settingsStore = new Store<AsStore<AppSettingsStore>>({
+const settingsStore = new Store<AppSettingsStore>({
   name: 'settings',
   accessPropertiesByDotNotation: false,
-  // tslint:disable-next-line: no-any
-  defaults: defaultSettings as any
+  defaults: defaultSettings
 });
 
-const cacheStore = new Store<AsStore<AppCacheStore>>({
+const cacheStore = new Store<AppCacheStore>({
   name: 'cache',
   accessPropertiesByDotNotation: false,
-  // tslint:disable-next-line: no-any
-  defaults: defaultCache as any
+  defaults: defaultCache
 });
 
 export const settings = new SettingsStorage(settingsStore);

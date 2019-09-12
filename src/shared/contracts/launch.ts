@@ -3,4 +3,6 @@ export interface LaunchRequest {
 }
 
 export interface LaunchResponse {
+  success: boolean;
+  error?: string;
 }

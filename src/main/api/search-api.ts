@@ -1,9 +1,9 @@
 import { IpcMain } from 'electron';
 import { actions } from 'shared/contracts/actions';
 import { createListener } from './utils';
-import { fileSearchService } from 'main/services/file-search-service';
 import { DataItem } from 'shared/contracts/search';
 import { mathService } from 'main/services/math-service';
+import { searchService } from 'main/services/search-service';
 
 export function initSearchApi(ipcMain: IpcMain) {
   createListener(ipcMain, actions.search, async rq => {
@@ -21,12 +21,13 @@ export function initSearchApi(ipcMain: IpcMain) {
       };
     }
 
-    const files = await fileSearchService.search(rq.query);
+    const files = await searchService.search(rq.query);
     return {
       items: files.map<DataItem>(x => ({
-        display: x.fileInfo.fileName,
-        value: x.fileInfo.fullPath,
-        icon: x.fileInfo.base64Icon,
+        id: x.id,
+        display: x.displayText,
+        value: x.value,
+        icon: x.icon,
         matches: x.matches
       }))
     };
