@@ -1,5 +1,5 @@
 import { searchIdHelper } from './search-id-helper';
-import { dataOperatorsRegistry } from 'main/data-providers/providers-registry';
+import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
 
 export class LauncherService {
   async launch(id: string) {

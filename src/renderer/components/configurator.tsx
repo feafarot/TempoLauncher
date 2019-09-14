@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline, createMuiTheme } from '@material-ui/core';
 
@@ -11,10 +11,10 @@ const theme = createMuiTheme({
   }
 });
 
-export const Configurator: React.FC = ({ children, ...props }) => {
+export const Configurator: React.FC = memo(({ children, ...props }) => {
   return <ThemeProvider theme={theme}>
     <CssBaseline>
       <>{children}</>
     </CssBaseline>
   </ThemeProvider>;
-};
+});

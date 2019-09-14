@@ -4,28 +4,35 @@ import { globby } from 'shared/utils/import-normalize';
 import { extractIcons } from 'main/icon-extractor';
 import { basename, extname, dirname } from 'path';
 import { cache, settings } from 'main/storage';
+import { CurrentUserReplacementKey } from 'main/constants';
+import { userInfo } from 'os';
 
 const fileNotFoundIconResponse = '--FNF--';
+const cacheStorageKey = 'files';
 
 export class FileIndexerService {
   private _indexingInProgress = false;
   private memoryFilesCache: FileInfo[] | null = null;
 
   constructor(private cacheStorage: AppCacheStorage, private settingsStorage: SettingsStorage) {
+    this.memoryFilesCache = this.cacheStorage.get(cacheStorageKey);
   }
 
   private get pattergs() {
-    return this.settingsStorage.get('searchPatterms').map(x => `${x.pattern}*.{${x.extensions}}`);
+    const userName = userInfo().username;
+    return this.settingsStorage
+      .get('searchPatterms')
+      .map(x => `${x.pattern.replace(CurrentUserReplacementKey, userName)}*.{${x.extensions}}`);
   }
 
   private updateCache(data: FileInfo[]) {
-    this.cacheStorage.set('files', data);
+    this.cacheStorage.set(cacheStorageKey, data);
     this.memoryFilesCache = data;
   }
 
   private getFromCache() {
     if (!this.memoryFilesCache) {
-      this.memoryFilesCache = this.cacheStorage.get('files');
+      this.memoryFilesCache = this.cacheStorage.get(cacheStorageKey);
     }
 
     return this.memoryFilesCache;
@@ -37,7 +44,7 @@ export class FileIndexerService {
 
   async indexFiles() {
     this._indexingInProgress = true;
-    const files = await globby(this.pattergs);
+    const files = await globby(this.pattergs, { suppressErrors: true });
     const icons = await extractIcons(files);
     const preparedCache = files
       .map<FileInfo>((x, i) => {

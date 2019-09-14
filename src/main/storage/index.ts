@@ -3,13 +3,13 @@ import { defaultSettings, AppSettingsStore, SettingsStorage } from './settings';
 import { defaultCache, AppCacheStore, AppCacheStorage } from './cache';
 
 const settingsStore = new Store<AppSettingsStore>({
-  name: 'settings',
+  name: '__tl-settings',
   accessPropertiesByDotNotation: false,
   defaults: defaultSettings
 });
 
 const cacheStore = new Store<AppCacheStore>({
-  name: 'cache',
+  name: '__tl-cache',
   accessPropertiesByDotNotation: false,
   defaults: defaultCache
 });

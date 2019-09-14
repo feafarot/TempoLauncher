@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, memo } from 'react';
 import { isArray } from 'util';
 import { MenuList, MenuItem, Paper } from '@material-ui/core';
 import { fitContent } from 'shared/utils';
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   }
 });
 
-export const ResultsList: React.FC<ResultsListProps> = ({ children, selectedIndex: selected, ...props }) => {
+export const ResultsList: React.FC<ResultsListProps> = memo(({ children, selectedIndex: selected, ...props }) => {
   const classes = useStyles();
   useLayoutEffect(() => {
     fitContent();
@@ -46,4 +46,4 @@ export const ResultsList: React.FC<ResultsListProps> = ({ children, selectedInde
         <MenuItem key={i} selected={selected === i}>{x}</MenuItem>)}
     </MenuList>
   </Paper>;
-};
+});

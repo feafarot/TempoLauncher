@@ -76,15 +76,27 @@ namespace IconExtarctor
             }
 
             var linkObj = Shortcut.ReadFromFile(path);
-            var target = linkObj?.LinkTargetIDList?.Path
-                ?? linkObj?.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode
-                ?? linkObj?.LinkInfo?.LocalBasePath;
+            var target = NormalizeNull(linkObj?.LinkTargetIDList?.Path)
+                ?? NormalizeNull(linkObj?.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode)
+                ?? NormalizeNull(linkObj?.LinkInfo?.LocalBasePath)
+                ?? NormalizeNull(linkObj?.StringData?.IconLocation);
+            if (string.IsNullOrEmpty(target) 
+                && linkObj.StringData.NameString.Contains("%windir%\\explorer.exe", StringComparison.InvariantCultureIgnoreCase)) 
+            {
+                target = "%windir%\\explorer.exe";
+            }
+
             if (Path.GetExtension(target) == ".msc")
             {
                 return path;
             }
 
             return target;
+        }
+
+        static string NormalizeNull(string value)
+        {
+            return string.IsNullOrEmpty(value) ? null : value;
         }
     }
 }

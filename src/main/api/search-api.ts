@@ -7,21 +7,28 @@ import { searchService } from 'main/services/search-service';
 
 export function initSearchApi(ipcMain: IpcMain) {
   createListener(ipcMain, actions.search, async rq => {
-    if (!rq.query) {
+    let query = rq.query;
+    if (!query) {
       return {
         items: []
       };
     }
 
-    const mathResult = mathService.evalExpr(rq.query);
-    if (mathResult != null && mathResult != rq.query && !rq.query.startsWith('\\')) {
+    let skipMath = false;
+    if (query.startsWith('\\')) {
+      query = query.substr(1);
+      skipMath = true;
+    }
+
+    const mathResult = mathService.evalExpr(query);
+    if (mathResult != null && mathResult != query && !skipMath) {
       return {
         items: [],
         mathEvalResult: mathResult
       };
     }
 
-    const files = await searchService.search(rq.query);
+    const files = await searchService.search(query, { dataProviderOptions: { rebuildCache: rq.rebuildCache } });
     return {
       items: files.map<DataItem>(x => ({
         id: x.id,

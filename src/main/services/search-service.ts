@@ -1,7 +1,7 @@
 import { TextMatch } from 'shared/utils/util-types';
 import { escapeRegExp } from 'shared/utils';
-import { DataOperatorFetchOptions, SearchableItem, DataOperatorsRegistry } from 'main/data-providers/data-operator';
-import { dataOperatorsRegistry } from 'main/data-providers/providers-registry';
+import { DataOperatorFetchOptions, SearchableItem, DataOperatorsRegistry } from 'main/data-operators/data-operator';
+import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
 import { searchIdHelper } from './search-id-helper';
 
 function optimizeMathces(matches: TextMatch[]) {

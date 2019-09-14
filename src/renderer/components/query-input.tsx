@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { InputBase } from '@material-ui/core';
 
 export enum QueryInputActionType {
@@ -16,7 +16,7 @@ type QueryInputProps = {
   query?: string;
 };
 
-export const QueryInput: React.FC<QueryInputProps> = ({ onChange, query }) => {
+export const QueryInput: React.FC<QueryInputProps> = memo(({ onChange, query }) => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const inputQuery = (e.target as HTMLInputElement).value;
     if (e.keyCode === 9) { // Tab
@@ -40,4 +40,4 @@ export const QueryInput: React.FC<QueryInputProps> = ({ onChange, query }) => {
     onKeyPress={handleKeyPress}
     onChange={handleChange}
     value={query || ''} />;
-};
+});

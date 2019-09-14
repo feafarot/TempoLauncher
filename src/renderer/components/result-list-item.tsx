@@ -23,7 +23,9 @@ const useStyles = makeStyles({
   },
   helper: {
     flex: `1`,
-    fontSize: 12
+    fontSize: 12,
+    overflow: 'hidden',
+    textOverflow: ''
   },
   img: {
     flex: `4 ${itemHeight}px`,
@@ -90,7 +92,7 @@ export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon
     <div className={classes.textContainer}>
       <span className={classes.mainText}>{markedValue}</span>
       {value && value.length > 13
-        && <span className={classes.helper}>{'helper > ' + value}</span>}
+        && <span className={classes.helper}>{helperText}</span>}
     </div>
   </div>;
 });

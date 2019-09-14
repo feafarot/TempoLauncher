@@ -1,7 +1,11 @@
 {
-  "name": "electron-webpack-quick-start",
+  "name": "tempo-launcher",
   "version": "0.0.0",
   "license": "MIT",
+  "author": {
+    "name": "Roman Konkin",
+    "email": "sly.feafarot@gmail.com"
+  },
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
@@ -9,6 +13,7 @@
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "electronWebpack": {
+    "title": "TempoLauncher",
     "whiteListedModules": [
       "@material-ui/styles",
       "@material-ui/core"

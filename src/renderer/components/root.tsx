@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { makeStyles, Paper } from '@material-ui/core';
 import { QueryInput, QueryInputActionInfo, QueryInputActionType } from './query-input';
 import { Option } from 'shared/utils';
@@ -15,6 +15,7 @@ const useStyles = makeStyles({
     overflow: 'hidden'
   },
   mainFrame: {
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -29,6 +30,11 @@ const useStyles = makeStyles({
     height: '100%',
     '-webkit-app-region': 'no-drag',
     marginLeft: 20
+  },
+  mathReslut: {
+    position: 'absolute',
+    fontSize: '11px',
+    bottom: 6
   }
 });
 
@@ -85,7 +91,7 @@ function useSelectionControl(items: DataItem[]) {
     selected] as const;
 }
 
-export const Root: React.FC = () => {
+export const Root: React.FC = memo(() => {
   const classes = useStyles();
   const [query, pluginKey, handleChange, result, resetData] = useQuerying();
   const [handlers, selectedIndex] = useSelectionControl(result.items);
@@ -108,18 +114,22 @@ export const Root: React.FC = () => {
           requestLaunch({ targetId });
           // Perform submit
           break;
+        case 116: // F5
+
+          break;
       }
     }}>
       <Paper className={classes.mainFrame}>
         <div className={classes.query}>
           <QueryInput query={query} onChange={handleChange} />
-          <span>{result.calc}</span>
+          {result.calc
+            && <span className={classes.mathReslut}> = {result.calc}</span>}
         </div>
       </Paper>
       <ResultsList
         selectedIndex={selectedIndex}
         children={result.items.map(x =>
-          <ResultListItem key={x.value} icon={x.icon} matches={x.matches} value={x.display} />)} />
+          <ResultListItem key={x.value} icon={x.icon} matches={x.matches} value={x.display} helperText={x.value} />)} />
     </div>
   </Configurator>;
-};
+});
