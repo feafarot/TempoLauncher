@@ -38,7 +38,6 @@ function getToolPaths() {
 
 function extractIconsInternal(paths: string[]) {
   const toolPaths = getToolPaths();
-  const cmd = `.\\${toolPaths.exe} ${paths.map(x => `"${x}"`).join(' ')}`;
   const res = new Promise<string[]>((resolve, reject) => {
     execFile(`${toolPaths.cwd}/${toolPaths.exe}`, paths, (err, stdout) => {
       if (err) {
@@ -58,15 +57,3 @@ export function extractIcons(paths: string[]) {
   const batches = getArgumentBatches(paths);
   return Promise.all(batches.map(x => extractIconsInternal(x))).then(x => x.flatMap(y => y));
 }
-
-// export function extractIcons(paths: string[]) {
-//   const toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extractor-tool/bin/Release/netcoreapp2.2/win10-x64/IconExtractor.exe');
-//   //spawn(toolPath, { argv0: paths.join(' ') });
-//   const res = new Observable<string>(obs => {
-//     exec(`"${toolPath}" ${paths.map(x => `"${x}"`).join(' ')}`, (err, stdout, stderr) => {
-//       const icons = stdout.split(EOL);
-//       icons.forEach(x => obs.next(x));
-//     });
-//   });
-//   return res;
-// }

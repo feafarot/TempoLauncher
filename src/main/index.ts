@@ -59,7 +59,9 @@ function createMainWindow() {
   });
 
   window.on('blur', () => {
-    //window.hide();
+    if (!isDevelopment) {
+      window.hide();
+    }
   });
 
   tray = new Tray(icon);

@@ -1,7 +1,10 @@
 import { searchIdHelper } from './search-id-helper';
 import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
+import { ScoringService, scoringService } from './scoring-service';
 
 export class LauncherService {
+  constructor(private scoringSvc: ScoringService) { }
+
   async launch(id: string) {
     const parsedId = searchIdHelper.parseId(id);
     const operator = dataOperatorsRegistry.find(x => x.name === parsedId.provider);
@@ -10,7 +13,8 @@ export class LauncherService {
     }
 
     await operator.provider.launch(parsedId.value);
+    this.scoringSvc.logLaunch(id);
   }
 }
 
-export const launcerService = new LauncherService();
+export const launcerService = new LauncherService(scoringService);

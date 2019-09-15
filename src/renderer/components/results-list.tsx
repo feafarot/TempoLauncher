@@ -1,17 +1,17 @@
 import React, { useLayoutEffect, memo } from 'react';
 import { isArray } from 'util';
-import { MenuList, MenuItem, Paper } from '@material-ui/core';
+import { MenuList, MenuItem, Paper, List, ListItem } from '@material-ui/core';
 import { fitContent } from 'shared/utils';
 import { makeStyles } from '@material-ui/styles';
 
 type ResultsListProps = {
-  selectedIndex?: number;
   children?: React.ReactNode[];
 };
 
+const maxHeight = 500;
 const useStyles = makeStyles({
   menuPaper: {
-    maxHeight: 500,
+    maxHeight: maxHeight,
     overflowY: 'scroll',
     overflowX: 'hidden',
     //scroll
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   }
 });
 
-export const ResultsList: React.FC<ResultsListProps> = memo(({ children, selectedIndex: selected, ...props }) => {
+export const ResultsList: React.FC<ResultsListProps> = memo(({ children, ...props }) => {
   const classes = useStyles();
   useLayoutEffect(() => {
     fitContent();
@@ -41,9 +41,8 @@ export const ResultsList: React.FC<ResultsListProps> = memo(({ children, selecte
   }
 
   return <Paper className={classes.menuPaper}>
-    <MenuList>
-      {children.map((x, i) =>
-        <MenuItem key={i} selected={selected === i}>{x}</MenuItem>)}
-    </MenuList>
+    <List dense>
+      {children}
+    </List>
   </Paper>;
 });

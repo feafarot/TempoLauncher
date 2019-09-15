@@ -1,49 +1,22 @@
-import React, { memo, ReactNode } from 'react';
+import React, { memo, ReactNode, useRef, useEffect, useMemo } from 'react';
 import { TextMatch } from 'shared/utils/util-types';
 import { makeStyles } from '@material-ui/styles';
-import { fontSize } from '@material-ui/system';
+import { Tooltip, ListItemText, ListItemIcon, ListItem } from '@material-ui/core';
 
-const itemHeight = 50;
 const useStyles = makeStyles({
+  root: {
+    // maxHeight: itemHeight,
+    // height: itemHeight
+  },
+  secondary: {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
+  },
   marked: {
     //backgroundColor: 'yellow',
     fontWeight: 'bold',
     textDecoration: 'underline'
-  },
-  root: {
-    display: 'flex',
-    flexFlow: 'row',
-    alignItems: 'flex-start',
-    placeContent: 'flex-start',
-    maxHeight: itemHeight,
-    height: itemHeight
-  },
-  mainText: {
-    //flex: '3'
-  },
-  helper: {
-    flex: `1`,
-    fontSize: 12,
-    overflow: 'hidden',
-    textOverflow: ''
-  },
-  img: {
-    flex: `4 ${itemHeight}px`,
-    display: 'flex',
-    alignItems: 'center',
-    height: '100%',
-    marginRight: 10
-    // 'img': {
-    //   margin: 'auto'
-    // }
-  },
-  textContainer: {
-    display: 'flex',
-    flexFlow: 'column',
-    justifyContent: 'center',
-    justifyItems: 'center',
-    maxHeight: itemHeight,
-    height: itemHeight
   }
 });
 
@@ -76,23 +49,46 @@ function markMatches(value: string, matches?: TextMatch[], markClass?: string): 
 }
 
 type ResultListItemProps = {
+  selected?: boolean;
   value: string;
   icon?: string;
   helperText?: string;
   matches?: TextMatch[];
+  onClick?: () => void;
 };
 
-export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon, helperText, matches }) => {
+export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon, helperText, matches, onClick, selected }) => {
   const classes = useStyles();
-  const markedValue = markMatches(value, matches, classes.marked);
-  return <div className={classes.root}>
-    <div className={classes.img}>
+  const rootDiv = useRef<HTMLDivElement>(null);
+  useEffect(
+    () => {
+      if (selected && rootDiv.current) {
+        rootDiv.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
+    },
+    [selected, value]);
+  const markedValue = useMemo(() => markMatches(value, matches, classes.marked), [value, matches, classes.marked]);
+  return <ListItem className={classes.root} selected={selected} ref={rootDiv} ContainerProps={{ onClick }} button>
+    <ListItemIcon>
       <img src={`data:image/png;base64,${icon}`} />
-    </div>
-    <div className={classes.textContainer}>
-      <span className={classes.mainText}>{markedValue}</span>
-      {value && value.length > 13
-        && <span className={classes.helper}>{helperText}</span>}
-    </div>
-  </div>;
+    </ListItemIcon>
+    <ListItemText
+      primary={<span className={''}>{markedValue}</span>}
+      secondary={<Tooltip title={helperText} placement='top'>
+        <span>{helperText}</span>
+      </Tooltip>}
+      secondaryTypographyProps={{ className: classes.secondary }} />
+  </ListItem>;
+  // return <div className={classes.root} onClick={onClick}>
+  //   <div className={classes.img}>
+  //     <img src={`data:image/png;base64,${icon}`} />
+  //   </div>
+  //   <div className={classes.textContainer}>
+  //     <span className={classes.mainText}>{markedValue}</span>
+  //     {value
+  //       && <Tooltip title={helperText} placement='top'>
+  //         <span className={classes.helper}>{helperText}</span>
+  //       </Tooltip>}
+  //   </div>
+  // </div>;
 });

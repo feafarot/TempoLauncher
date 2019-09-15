@@ -74,32 +74,41 @@ export function useQuerying() {
 }
 
 function useSelectionControl(items: DataItem[]) {
-  const [selected, setSelected] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const maxIndex = items.length - 1;
   return [
     {
       handleUp: () => {
-        if (items.length > 0 && selected > 0) {
-          setSelected(s => s - 1);
+        if (items.length > 0) {
+          setSelectedIndex(s => s === 0 ? maxIndex : s - 1);
         }
       },
       handleDown: () => {
-        if (items.length > 0 && selected < items.length - 1) {
-          setSelected(s => s + 1);
+        if (items.length > 0) {
+          setSelectedIndex(s => s < maxIndex ? s + 1 : 0);
         }
       }
     },
-    selected] as const;
+    selectedIndex,
+    () => setSelectedIndex(0)] as const;
 }
 
 export const Root: React.FC = memo(() => {
   const classes = useStyles();
   const [query, pluginKey, handleChange, result, resetData] = useQuerying();
-  const [handlers, selectedIndex] = useSelectionControl(result.items);
+  const [handlers, selectedIndex, resetSelected] = useSelectionControl(result.items);
   const requestLaunch = useApiAction(actions.launch, (resp) => {
     if (resp.success) {
       resetData();
+      resetSelected();
     }
   });
+
+  function launchSelected() {
+    const targetId = result.items[selectedIndex].id;
+    requestLaunch({ targetId });
+  }
+
   return <Configurator>
     <div className={classes.root} onKeyDown={e => {
       switch (e.keyCode) {
@@ -110,12 +119,9 @@ export const Root: React.FC = memo(() => {
           handlers.handleDown();
           break;
         case 13: // Enter
-          const targetId = result.items[selectedIndex].id;
-          requestLaunch({ targetId });
-          // Perform submit
+          launchSelected();
           break;
         case 116: // F5
-
           break;
       }
     }}>
@@ -127,9 +133,15 @@ export const Root: React.FC = memo(() => {
         </div>
       </Paper>
       <ResultsList
-        selectedIndex={selectedIndex}
-        children={result.items.map(x =>
-          <ResultListItem key={x.value} icon={x.icon} matches={x.matches} value={x.display} helperText={x.value} />)} />
+        children={result.items.map((x, i) =>
+          <ResultListItem
+            key={x.value}
+            selected={i === selectedIndex}
+            icon={x.icon}
+            matches={x.matches}
+            value={x.display}
+            helperText={x.value}
+            onClick={launchSelected} />)} />
     </div>
   </Configurator>;
 });

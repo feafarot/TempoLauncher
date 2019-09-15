@@ -8,12 +8,24 @@ export interface FileInfo {
   base64Icon?: string;
 }
 
+export interface ResultLaunchStats {
+  [id: string]: ResultItemLaunchStat;
+}
+
+export interface ResultItemLaunchStat {
+  launchCount: number;
+  /** In milliseconds */
+  lastLaunchDate?: number;
+}
+
 export interface AppCacheStore {
   files: FileInfo[];
+  launchStats: ResultLaunchStats;
 }
 
 export class AppCacheStorage extends LocalStorage<AppCacheStore> { }
 
 export const defaultCache: AppCacheStore = {
-  files: []
+  files: [],
+  launchStats: {}
 };

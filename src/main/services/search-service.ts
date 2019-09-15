@@ -3,6 +3,7 @@ import { escapeRegExp } from 'shared/utils';
 import { DataOperatorFetchOptions, SearchableItem, DataOperatorsRegistry } from 'main/data-operators/data-operator';
 import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
 import { searchIdHelper } from './search-id-helper';
+import { ScoringService, scoringService as defaultScoringService } from './scoring-service';
 
 function optimizeMathces(matches: TextMatch[]) {
   return matches.reduce<TextMatch[]>(
@@ -71,7 +72,7 @@ export interface SearchOptions {
 }
 
 export class SearchService {
-  constructor(private providers: DataOperatorsRegistry) { }
+  constructor(private providers: DataOperatorsRegistry, private scoringSvc: ScoringService) { }
 
   async search(query: string, options?: SearchOptions) {
     const dataProviderOptions = (options && options.dataProviderOptions) || undefined;
@@ -88,8 +89,8 @@ export class SearchService {
         });
       })
       .filter(x => x.matches.length > 0);
-    return searchResults;
+    return this.scoringSvc.sortResults(searchResults);
   }
 }
 
-export const searchService = new SearchService(dataOperatorsRegistry);
+export const searchService = new SearchService(dataOperatorsRegistry, defaultScoringService);
