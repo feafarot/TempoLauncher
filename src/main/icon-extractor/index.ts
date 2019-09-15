@@ -1,8 +1,8 @@
-import { spawn, exec, execFile } from 'child_process';
+import { execFile } from 'child_process';
 import path from 'path';
 import { app } from 'electron';
-import { Observable } from 'rxjs';
 import { EOL } from 'os';
+import { isDev } from 'main/main-utils';
 
 const MaxCmdArgsLength = 2300;
 function getArgumentBatches(paths: string[]) {
@@ -24,11 +24,23 @@ function getArgumentBatches(paths: string[]) {
   return batches;
 }
 
+function getToolPaths() {
+  let toolPath = path.resolve(process.resourcesPath!, 'tools/icon-extractor');
+  if (isDev()) {
+    toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extarctor-tool/bin/Release/netcoreapp2.2/win10-x64');
+  }
+
+  return {
+    cwd: toolPath + '',
+    exe: 'IconExtarctor.exe'
+  };
+}
+
 function extractIconsInternal(paths: string[]) {
-  const toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extarctor-tool/bin/Release/netcoreapp2.2/win10-x64/IconExtarctor.exe');
-  const cmd = `"${toolPath}" ${paths.map(x => `"${x}"`).join(' ')}`;
+  const toolPaths = getToolPaths();
+  const cmd = `.\\${toolPaths.exe} ${paths.map(x => `"${x}"`).join(' ')}`;
   const res = new Promise<string[]>((resolve, reject) => {
-    exec(cmd, (err, stdout) => {
+    execFile(`${toolPaths.cwd}/${toolPaths.exe}`, paths, (err, stdout) => {
       if (err) {
         reject(err);
         return;

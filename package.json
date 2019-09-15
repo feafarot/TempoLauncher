@@ -1,6 +1,6 @@
 {
   "name": "tempo-launcher",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Roman Konkin",
@@ -10,7 +10,32 @@
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "tempo-launcher",
+    "productName": "TempoLauncer",
+    "copyright": "Copyright © 2019 ${author}",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "extraResources": [
+      {
+        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp2.2/win10-x64",
+        "to": "tools/icon-extractor",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   },
   "electronWebpack": {
     "title": "TempoLauncher",
@@ -30,6 +55,7 @@
     "@material-ui/icons": "^4.4.1",
     "@material-ui/styles": "^4.4.1",
     "electron-store": "^5.0.0",
+    "electron-unhandled": "^3.0.0",
     "globby": "^10.0.1",
     "mathjs": "^6.2.1",
     "react": "^16.9.0",

@@ -3,11 +3,15 @@ import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initializeApi } from './api';
 import { resolve } from 'path';
+import { isDev } from './main-utils';
+import unhandled from 'electron-unhandled';
+
+unhandled();
 
 app.commandLine.appendSwitch('remote-debugging-port', '9228');
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
-const icon = resolve(__static, 'icon.v3.png');
+const isDevelopment = isDev();
+const icon = resolve(__static, 'icon.png');
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
