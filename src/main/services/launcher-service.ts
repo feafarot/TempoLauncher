@@ -1,6 +1,7 @@
 import { searchIdHelper } from './search-id-helper';
 import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
 import { ScoringService, scoringService } from './scoring-service';
+import { mainWindowInteractions } from 'main/main-utils';
 
 export class LauncherService {
   constructor(private scoringSvc: ScoringService) { }
@@ -14,6 +15,7 @@ export class LauncherService {
 
     await operator.provider.launch(parsedId.value);
     this.scoringSvc.logLaunch(id);
+    mainWindowInteractions.hide();
   }
 }
 

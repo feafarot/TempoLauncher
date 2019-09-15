@@ -1,9 +1,9 @@
-import { app, BrowserWindow, Tray } from 'electron';
+import { app, BrowserWindow, Tray, globalShortcut, Menu } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { initializeApi } from './api';
 import { resolve } from 'path';
-import { isDev } from './main-utils';
+import { isDev, mainWindowInteractions } from './main-utils';
 import unhandled from 'electron-unhandled';
 
 unhandled();
@@ -68,7 +68,8 @@ function createMainWindow() {
   tray.on('click', () => {
     window.isVisible() ? window.hide() : window.show();
   });
-
+  const trayMenu = Menu.buildFromTemplate([{ label: 'Quit', type: 'normal', click: () => app.quit() }]);
+  tray.setContextMenu(trayMenu);
   return window;
 }
 
@@ -87,8 +88,24 @@ app.on('activate', () => {
   }
 });
 
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
+
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   initializeApi();
   mainWindow = createMainWindow();
+  mainWindowInteractions.init(mainWindow);
+  globalShortcut.register('Super+Esc', () => {
+    if (mainWindow) {
+      if (!mainWindow.isVisible()) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+      else {
+        mainWindow.hide();
+      }
+    }
+  });
 });
