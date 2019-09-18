@@ -1,4 +1,6 @@
-export const windowConfig = {
-  width: 600,
-  height: 60
+export const uiConfig = {
+  appWidth: 600,
+  appIdleHeight: 60,
+  itemHeight: 60,
+  maxItemsShown: 8
 };

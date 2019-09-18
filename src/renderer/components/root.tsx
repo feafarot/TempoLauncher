@@ -1,26 +1,29 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect, useLayoutEffect, useCallback } from 'react';
 import { makeStyles, Paper } from '@material-ui/core';
 import { QueryInput, QueryInputActionInfo, QueryInputActionType } from './query-input';
 import { Option } from 'shared/utils';
 import { ResultsList } from './results-list';
-import { windowConfig } from '../config';
+import { uiConfig } from '../config';
 import { Configurator } from './configurator';
 import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
 import { DataItem } from 'shared/contracts/search';
 import { ResultListItem } from './result-list-item';
+import { debounce } from 'lodash';
 
 const useStyles = makeStyles({
   root: {
     overflow: 'hidden'
   },
   mainFrame: {
-    position: 'relative',
+    position: 'fixed',
     display: 'flex',
+    overflow: 'hidden',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: windowConfig.width,
-    minHeight: windowConfig.height,
+    width: uiConfig.appWidth,
+    minHeight: uiConfig.appIdleHeight,
+    zIndex: 100,
     '-webkit-app-region': 'drag'
   },
   query: {
@@ -46,12 +49,12 @@ export function useQuerying() {
   const runSearch = useApiAction(actions.search, (resp) => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
-
+  const debouncedRunSearch = useCallback(debounce(runSearch, 150), []);
   const handleChange = (actionInfo: QueryInputActionInfo) => {
     switch (actionInfo.type) {
       case QueryInputActionType.QueryChange:
         setQuery(actionInfo.query);
-        runSearch({ query: actionInfo.query, prefix: pluginKey || '' });
+        debouncedRunSearch({ query: actionInfo.query, prefix: pluginKey || '' });
         break;
       case QueryInputActionType.SelectMode:
         setPluginKey(actionInfo.query);
@@ -93,6 +96,23 @@ function useSelectionControl(items: DataItem[]) {
     () => setSelectedIndex(0)] as const;
 }
 
+function useWindowsSizeFix(resultsLength: number) {
+  const requestResize = useApiAction(actions.resize, () => { });
+
+  const resultsToRender = resultsLength > uiConfig.maxItemsShown ? uiConfig.maxItemsShown : resultsLength;
+  const newHeight = resultsToRender * uiConfig.itemHeight + uiConfig.appIdleHeight;
+  //requestAnimationFrame(() => window.resizeTo(uiConfig.appWidth, newHeight));
+  window.resizeTo(uiConfig.appWidth, newHeight);
+
+  useEffect(
+    () => {
+      window.resizeTo(uiConfig.appWidth, newHeight);
+      requestResize({ width: uiConfig.appWidth, height: newHeight });
+      //requestAnimationFrame(() => window.resizeTo(uiConfig.appWidth, newHeight));
+    },
+    [resultsLength]);
+}
+
 export const Root: React.FC = memo(() => {
   const classes = useStyles();
   const [query, pluginKey, handleChange, result, resetData] = useQuerying();
@@ -103,6 +123,7 @@ export const Root: React.FC = memo(() => {
       resetSelected();
     }
   });
+  useWindowsSizeFix(result.items.length);
 
   function launchSelected() {
     const targetId = result.items[selectedIndex].id;

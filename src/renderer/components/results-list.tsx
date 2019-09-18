@@ -1,16 +1,18 @@
 import React, { useLayoutEffect, memo } from 'react';
 import { isArray } from 'util';
-import { MenuList, MenuItem, Paper, List, ListItem } from '@material-ui/core';
+import { Paper, List } from '@material-ui/core';
 import { fitContent } from 'shared/utils';
 import { makeStyles } from '@material-ui/styles';
+import { uiConfig } from 'renderer/config';
 
 type ResultsListProps = {
   children?: React.ReactNode[];
 };
 
-const maxHeight = 500;
+const maxHeight = uiConfig.itemHeight * uiConfig.maxItemsShown;
 const useStyles = makeStyles({
   menuPaper: {
+    marginTop: uiConfig.appIdleHeight,
     maxHeight: maxHeight,
     overflowY: 'scroll',
     overflowX: 'hidden',
@@ -27,21 +29,25 @@ const useStyles = makeStyles({
       backgroundColor: 'rgba(255,255,255,.3)',
       outline: '1px solid white'
     }
+  },
+  list: {
+    paddingTop: 0,
+    paddingBottom: 0
   }
 });
 
 export const ResultsList: React.FC<ResultsListProps> = memo(({ children, ...props }) => {
   const classes = useStyles();
-  useLayoutEffect(() => {
-    fitContent();
-  });
+  // useLayoutEffect(() => {
+  //   requestAnimationFrame(()=> fitContent());
+  // });
 
-  if (!isArray(children) || children.length === 0) {
-    return null;
-  }
+  // if (!isArray(children) || children.length === 0) {
+  //   return null;
+  // }
 
   return <Paper className={classes.menuPaper}>
-    <List dense>
+    <List className={classes.list} dense>
       {children}
     </List>
   </Paper>;

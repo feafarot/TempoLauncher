@@ -1,6 +1,7 @@
 {
   "name": "tempo-launcher",
-  "version": "0.2.0",
+  "version": "0.2.1-beta",
+  "description": "TempoLauncer allow you to find and launch apps on your PC.",
   "license": "MIT",
   "author": {
     "name": "Roman Konkin",
@@ -20,21 +21,18 @@
     "win": {
       "target": [
         {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
+          "target": "nsis",
+          "arch": ["x64"]
         }
       ]
     },
     "extraResources": [
       {
-        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp2.2/win10-x64",
+        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win10-x64/publish",
         "to": "tools/icon-extractor",
-        "filter": [
-          "**/*"
-        ]
-      }
+        "filter": ["**/*"]
+      },
+      "static"
     ]
   },
   "electronWebpack": {

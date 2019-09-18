@@ -2,11 +2,12 @@ import React, { memo, ReactNode, useRef, useEffect, useMemo } from 'react';
 import { TextMatch } from 'shared/utils/util-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tooltip, ListItemText, ListItemIcon, ListItem } from '@material-ui/core';
+import { uiConfig } from 'renderer/config';
 
 const useStyles = makeStyles({
   root: {
-    // maxHeight: itemHeight,
-    // height: itemHeight
+    maxHeight: uiConfig.itemHeight,
+    height: uiConfig.itemHeight
   },
   secondary: {
     overflow: 'hidden',
@@ -74,9 +75,7 @@ export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon
     </ListItemIcon>
     <ListItemText
       primary={<span className={''}>{markedValue}</span>}
-      secondary={<Tooltip title={helperText} placement='top'>
-        <span>{helperText}</span>
-      </Tooltip>}
+      secondary={<span title={helperText}>{helperText}</span>}
       secondaryTypographyProps={{ className: classes.secondary }} />
   </ListItem>;
   // return <div className={classes.root} onClick={onClick}>

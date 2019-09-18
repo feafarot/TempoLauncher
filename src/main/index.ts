@@ -5,73 +5,11 @@ import { initializeApi } from './api';
 import { resolve } from 'path';
 import { isDev, mainWindowInteractions } from './main-utils';
 import unhandled from 'electron-unhandled';
+import { getMainWindow, initializeApp } from './app-initializer';
 
 unhandled();
 
 app.commandLine.appendSwitch('remote-debugging-port', '9228');
-
-const isDevelopment = isDev();
-const icon = resolve(__static, 'icon.png');
-// global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow: BrowserWindow | null = null;
-let tray: Tray | null = null;
-function createMainWindow() {
-  const window = new BrowserWindow({
-    webPreferences: { nodeIntegration: true },
-    frame: false,
-    useContentSize: true,
-    transparent: true,
-    icon: icon,
-    width: 600
-  });
-
-  if (isDevelopment) {
-    window.webContents.openDevTools({ mode: 'undocked' });
-  }
-
-  if (isDevelopment) {
-    window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
-  } else {
-    window.loadURL(
-      formatUrl({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file',
-        slashes: true
-      })
-    );
-  }
-
-  window.on('closed', () => {
-    mainWindow = null;
-  });
-
-  window.webContents.on('devtools-opened', () => {
-    window.focus();
-    setImmediate(() => {
-      window.focus();
-    });
-  });
-
-  // tslint:disable-next-line: no-any
-  window.on('minimize', (e: any) => {
-    e.preventDefault();
-    window.hide();
-  });
-
-  window.on('blur', () => {
-    if (!isDevelopment) {
-      window.hide();
-    }
-  });
-
-  tray = new Tray(icon);
-  tray.on('click', () => {
-    window.isVisible() ? window.hide() : window.show();
-  });
-  const trayMenu = Menu.buildFromTemplate([{ label: 'Quit', type: 'normal', click: () => app.quit() }]);
-  tray.setContextMenu(trayMenu);
-  return window;
-}
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
@@ -83,8 +21,8 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow();
+  if (getMainWindow() === null) {
+    initializeApp();
   }
 });
 
@@ -95,16 +33,15 @@ app.on('will-quit', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   initializeApi();
-  mainWindow = createMainWindow();
-  mainWindowInteractions.init(mainWindow);
+  const window = initializeApp();
+  mainWindowInteractions.init(window);
   globalShortcut.register('Super+Esc', () => {
-    if (mainWindow) {
-      if (!mainWindow.isVisible()) {
-        mainWindow.show();
-        mainWindow.focus();
-      }
-      else {
-        mainWindow.hide();
+    if (window) {
+      if (!window.isVisible()) {
+        window.show();
+        window.focus();
+      } else {
+        window.hide();
       }
     }
   });

@@ -95,7 +95,7 @@
       "port": 9228,
       "webRoot": "${workspaceFolder}",
       "timeout": 50000,
-      "urlFilter": "*localhost:*"
+      //"urlFilter": "*localhost:*"
       //"url": "http://localhost:9080"
     }
   ],
