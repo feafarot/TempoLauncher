@@ -49,7 +49,8 @@ export function useQuerying() {
   const runSearch = useApiAction(actions.search, (resp) => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
-  const debouncedRunSearch = useCallback(debounce(runSearch, 150), []);
+  const requestMinimize = useApiAction(actions.minimize, () => {});
+  const debouncedRunSearch = useCallback(debounce(runSearch, 120), []);
   const handleChange = (actionInfo: QueryInputActionInfo) => {
     switch (actionInfo.type) {
       case QueryInputActionType.QueryChange:
@@ -123,6 +124,7 @@ export const Root: React.FC = memo(() => {
       resetSelected();
     }
   });
+  const requestMinimize = useApiAction(actions.minimize, () => { });
   useWindowsSizeFix(result.items.length);
 
   function launchSelected() {
@@ -141,8 +143,13 @@ export const Root: React.FC = memo(() => {
           break;
         case 13: // Enter
           launchSelected();
+          resetData();
           break;
         case 116: // F5
+          break;
+        case 27: // Esc
+          requestMinimize();
+          resetData();
           break;
       }
     }}>

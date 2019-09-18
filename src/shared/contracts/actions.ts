@@ -6,5 +6,6 @@ import { ResizeRequest } from './resize';
 export const actions = {
   search: Action.create<SearchRequest, SearchResponse>('search'),
   launch: Action.create<LaunchRequest, LaunchResponse>('launch'),
-  resize: Action.create<ResizeRequest, void>('resize')
+  resize: Action.create<ResizeRequest, void>('resize'),
+  minimize: Action.create<void, void>('minimize')
 };
