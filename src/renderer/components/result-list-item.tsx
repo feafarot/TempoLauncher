@@ -2,7 +2,7 @@ import React, { memo, ReactNode, useRef, useEffect, useMemo } from 'react';
 import { TextMatch } from 'shared/utils/util-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tooltip, ListItemText, ListItemIcon, ListItem } from '@material-ui/core';
-import { uiConfig } from 'renderer/config';
+import { uiConfig } from 'shared/ui-config';
 
 const useStyles = makeStyles({
   root: {

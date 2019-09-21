@@ -13,11 +13,10 @@ function getArgumentBatches(paths: string[]) {
     if (paths[i].length + curretLength < MaxCmdArgsLength) {
       curretLength += paths[i].length;
       batches[currentBatchIndex].push(paths[i]);
-    }
-    else {
-      batches.push([]);
+    } else {
+      batches.push([paths[i]]);
       currentBatchIndex++;
-      curretLength = 0;
+      curretLength = paths[i].length;
     }
   }
 
@@ -45,7 +44,7 @@ function extractIconsInternal(paths: string[]) {
         return;
       }
 
-      const icons = stdout.split(EOL);
+      const icons = stdout.trimEnd().split(EOL);
       resolve(icons);
     });
   });

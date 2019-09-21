@@ -1,9 +1,8 @@
 import React, { useState, memo, useEffect, useLayoutEffect, useCallback } from 'react';
 import { makeStyles, Paper } from '@material-ui/core';
 import { QueryInput, QueryInputActionInfo, QueryInputActionType } from './query-input';
-import { Option } from 'shared/utils';
 import { ResultsList } from './results-list';
-import { uiConfig } from '../config';
+import { uiConfig } from '../../shared/ui-config';
 import { Configurator } from './configurator';
 import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
@@ -42,14 +41,14 @@ const useStyles = makeStyles({
 });
 
 export function useQuerying() {
-  const defaultState = { items: [] };
+  type State = { items: DataItem[], calc?: string };
+  const defaultState: State = { items: [] };
   const [query, setQuery] = useState('');
-  const [pluginKey, setPluginKey] = useState<Option<string>>(null);
-  const [result, setResult] = useState<{ items: DataItem[], calc?: string }>(defaultState);
+  const [pluginKey, setPluginKey] = useState<string | null>(null);
+  const [result, setResult] = useState<State>(defaultState);
   const runSearch = useApiAction(actions.search, (resp) => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
-  const requestMinimize = useApiAction(actions.minimize, () => {});
   const debouncedRunSearch = useCallback(debounce(runSearch, 120), []);
   const handleChange = (actionInfo: QueryInputActionInfo) => {
     switch (actionInfo.type) {
@@ -102,14 +101,10 @@ function useWindowsSizeFix(resultsLength: number) {
 
   const resultsToRender = resultsLength > uiConfig.maxItemsShown ? uiConfig.maxItemsShown : resultsLength;
   const newHeight = resultsToRender * uiConfig.itemHeight + uiConfig.appIdleHeight;
-  //requestAnimationFrame(() => window.resizeTo(uiConfig.appWidth, newHeight));
-  window.resizeTo(uiConfig.appWidth, newHeight);
 
   useEffect(
     () => {
-      window.resizeTo(uiConfig.appWidth, newHeight);
       requestResize({ width: uiConfig.appWidth, height: newHeight });
-      //requestAnimationFrame(() => window.resizeTo(uiConfig.appWidth, newHeight));
     },
     [resultsLength]);
 }
@@ -129,7 +124,7 @@ export const Root: React.FC = memo(() => {
 
   function launchSelected() {
     const targetId = result.items[selectedIndex].id;
-    requestLaunch({ targetId });
+    requestLaunch({ targetId, query, source: pluginKey || undefined });
   }
 
   return <Configurator>

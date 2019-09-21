@@ -2,6 +2,7 @@ import { BrowserWindow, Tray, Menu, app } from 'electron';
 import { resolve, join } from 'path';
 import { format as formatUrl } from 'url';
 import { isDev } from './main-utils';
+import { uiConfig } from 'shared/ui-config';
 
 const isDevelopment = isDev();
 const icon = resolve(__static, 'icon.png');
@@ -27,8 +28,9 @@ function createMainWindowWithTray() {
     useContentSize: false,
     transparent: true,
     icon: icon,
-    width: 600,
-    height: 60,
+    width: uiConfig.appWidth,
+    height: uiConfig.appIdleHeight,
+    minHeight: uiConfig.appIdleHeight,
     resizable: false,
   });
 

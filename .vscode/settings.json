@@ -1,5 +1,6 @@
 {
     "typescript.preferences.quoteStyle": "single",
     "javascript.preferences.quoteStyle": "single",
-    "deepcode.review.results.hideInformationIssues": false
+    "deepcode.review.results.hideInformationIssues": false,
+    "editor.tabSize": 2
 }

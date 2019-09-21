@@ -10,7 +10,7 @@ export function initLaunchApi(ipcMain: IpcMain) {
     }
 
     try {
-      launcerService.launch(rq.targetId);
+      launcerService.launch(rq.targetId, rq.query);
     }
     catch (e) {
       return { success: false, error: e };

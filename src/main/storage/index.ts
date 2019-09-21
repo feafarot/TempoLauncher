@@ -1,18 +1,6 @@
 import Store from 'electron-store';
-import { defaultSettings, AppSettingsStore, SettingsStorage } from './settings';
-import { defaultCache, AppCacheStore, AppCacheStorage } from './cache';
-
-const settingsStore = new Store<AppSettingsStore>({
-  name: '__tl-settings',
-  accessPropertiesByDotNotation: false,
-  defaults: defaultSettings
-});
-
-const cacheStore = new Store<AppCacheStore>({
-  name: '__tl-cache',
-  accessPropertiesByDotNotation: false,
-  defaults: defaultCache
-});
+import { AppSettingsStore, SettingsStorage, settingsStore } from './settings';
+import { AppCacheStore, AppCacheStorage, cacheStoreOptions } from './cache';
 
 export const settings = new SettingsStorage(settingsStore);
-export const cache = new AppCacheStorage(cacheStore);
+export const cache = new AppCacheStorage(cacheStoreOptions);

@@ -89,7 +89,7 @@ export class SearchService {
         });
       })
       .filter(x => x.matches.length > 0);
-    return this.scoringSvc.sortResults(searchResults);
+    return this.scoringSvc.sortResults(searchResults, query);
   }
 }
 

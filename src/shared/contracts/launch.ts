@@ -1,5 +1,7 @@
 export interface LaunchRequest {
   targetId: string;
+  query: string;
+  source?: string;
 }
 
 export interface LaunchResponse {

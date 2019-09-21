@@ -3,7 +3,7 @@ import { isArray } from 'util';
 import { Paper, List } from '@material-ui/core';
 import { fitContent } from 'shared/utils';
 import { makeStyles } from '@material-ui/styles';
-import { uiConfig } from 'renderer/config';
+import { uiConfig } from 'shared/ui-config';
 
 type ResultsListProps = {
   children?: React.ReactNode[];

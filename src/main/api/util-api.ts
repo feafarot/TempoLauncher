@@ -6,7 +6,9 @@ import { getMainWindow } from 'main/app-initializer';
 export function initUtilApi(ipcMain: IpcMain) {
   createListener(ipcMain, actions.resize, async rq => {
     const win = getMainWindow();
-    win.setMaximumSize(rq.width, rq.height);
+    const contentBounds = win.getContentBounds();
+    win.setContentBounds({ ...contentBounds, height: rq.height });
+    //win.setMaximumSize(rq.width, rq.height);
     win.setSize(rq.width, rq.height);
   });
 

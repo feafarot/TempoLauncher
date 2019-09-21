@@ -6,7 +6,7 @@ import { mainWindowInteractions } from 'main/main-utils';
 export class LauncherService {
   constructor(private scoringSvc: ScoringService) { }
 
-  async launch(id: string) {
+  async launch(id: string, query: string) {
     const parsedId = searchIdHelper.parseId(id);
     const operator = dataOperatorsRegistry.find(x => x.name === parsedId.provider);
     if (!operator) {
@@ -14,7 +14,7 @@ export class LauncherService {
     }
 
     await operator.provider.launch(parsedId.value);
-    this.scoringSvc.logLaunch(id);
+    this.scoringSvc.logLaunch(id, query);
     mainWindowInteractions.hide();
   }
 }
