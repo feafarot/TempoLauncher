@@ -1,7 +1,7 @@
 {
   "name": "tempo-launcher",
   "version": "0.2.3",
-  "description": "TempoLauncer allow you to find and launch apps on your PC.",
+  "description": "TempoLauncher allow you to find and launch apps on your PC.",
   "license": "MIT",
   "author": {
     "name": "Roman Konkin",
@@ -16,7 +16,7 @@
   },
   "build": {
     "appId": "tempo-launcher",
-    "productName": "TempoLauncer",
+    "productName": "TempoLauncher",
     "copyright": "Copyright © 2019 ${author}",
     "win": {
       "target": [
