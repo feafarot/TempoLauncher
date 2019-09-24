@@ -9,6 +9,7 @@ import { actions } from 'shared/contracts/actions';
 import { DataItem } from 'shared/contracts/search';
 import { ResultListItem } from './result-list-item';
 import { debounce } from 'lodash';
+import { useSelectionControl } from './search-frame-hooks';
 
 const useStyles = makeStyles({
   root: {
@@ -76,26 +77,6 @@ export function useQuerying() {
   ] as const;
 }
 
-function useSelectionControl(items: DataItem[]) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const maxIndex = items.length - 1;
-  return [
-    {
-      handleUp: () => {
-        if (items.length > 0) {
-          setSelectedIndex(s => s === 0 ? maxIndex : s - 1);
-        }
-      },
-      handleDown: () => {
-        if (items.length > 0) {
-          setSelectedIndex(s => s < maxIndex ? s + 1 : 0);
-        }
-      }
-    },
-    selectedIndex,
-    () => setSelectedIndex(0)] as const;
-}
-
 function useWindowsSizeFix(resultsLength: number) {
   const requestResize = useApiAction(actions.resize, () => { });
 
@@ -109,21 +90,21 @@ function useWindowsSizeFix(resultsLength: number) {
     [resultsLength]);
 }
 
-export const Root: React.FC = memo(() => {
+export const SearchFrame: React.FC = memo(() => {
   const classes = useStyles();
   const [query, pluginKey, handleChange, result, resetData] = useQuerying();
-  const [handlers, selectedIndex, resetSelected] = useSelectionControl(result.items);
+  const selection = useSelectionControl(result.items);
   const requestLaunch = useApiAction(actions.launch, (resp) => {
     if (resp.success) {
       resetData();
-      resetSelected();
+      selection.reset();
     }
   });
   const requestMinimize = useApiAction(actions.minimize, () => { });
   useWindowsSizeFix(result.items.length);
 
   function launchSelected() {
-    const targetId = result.items[selectedIndex].id;
+    const targetId = result.items[selection.selectedIndex].id;
     requestLaunch({ targetId, query, source: pluginKey || undefined });
   }
 
@@ -131,10 +112,10 @@ export const Root: React.FC = memo(() => {
     <div className={classes.root} onKeyDown={e => {
       switch (e.keyCode) {
         case 38: // ArrowUp
-          handlers.handleUp();
+          selection.handleUp();
           break;
         case 40: // ArrowDown
-          handlers.handleDown();
+          selection.handleDown();
           break;
         case 13: // Enter
           launchSelected();
@@ -159,7 +140,7 @@ export const Root: React.FC = memo(() => {
         children={result.items.map((x, i) =>
           <ResultListItem
             key={x.value}
-            selected={i === selectedIndex}
+            selected={i === selection.selectedIndex}
             icon={x.icon}
             matches={x.matches}
             value={x.display}

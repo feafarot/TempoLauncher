@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Root } from './components/root';
+import { SearchFrame } from './components/search-frame';
 import 'typeface-roboto/index.css';
 import { error, catchErrors } from 'electron-log';
 
-ReactDOM.render(<Root />, document.querySelector('#app'));
+ReactDOM.render(<SearchFrame />, document.querySelector('#app'));
 
 // window.onerror = (ev, s, err) => {
 //   error(err);
