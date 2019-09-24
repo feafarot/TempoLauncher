@@ -1,15 +1,16 @@
-import { app, BrowserWindow, Tray, globalShortcut, Menu } from 'electron';
-import * as path from 'path';
-import { format as formatUrl } from 'url';
+import { app, globalShortcut } from 'electron';
 import { initializeApi } from './api';
-import { resolve } from 'path';
 import { isDev, mainWindowInteractions } from './main-utils';
 import unhandled from 'electron-unhandled';
 import { getMainWindow, initializeApp } from './app-initializer';
+import { info, error, catchErrors } from 'electron-log';
 
-unhandled();
-
-app.commandLine.appendSwitch('remote-debugging-port', '9228');
+if (!isDev()) {
+  //unhandled();
+}
+else {
+  app.commandLine.appendSwitch('remote-debugging-port', '9228');
+}
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
@@ -32,7 +33,9 @@ app.on('will-quit', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  info('Initializing API...');
   initializeApi();
+  info('Initializing main window...');
   const window = initializeApp();
   mainWindowInteractions.init(window);
   globalShortcut.register('Super+Esc', () => {
@@ -46,3 +49,7 @@ app.on('ready', () => {
     }
   });
 });
+
+catchErrors({ showDialog: true });
+// process.on('uncaughtException', e => error(e));
+// process.on('unhandledRejection', e => error(e));

@@ -1,2 +1,2 @@
-import globbyImp from 'globby';
-export const globby = globbyImp;
+import globbyInp from 'globby';
+export const globby = globbyInp;
