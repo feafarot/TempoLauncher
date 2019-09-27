@@ -78,16 +78,4 @@ export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon
       secondary={<span title={helperText}>{helperText}</span>}
       secondaryTypographyProps={{ className: classes.secondary }} />
   </ListItem>;
-  // return <div className={classes.root} onClick={onClick}>
-  //   <div className={classes.img}>
-  //     <img src={`data:image/png;base64,${icon}`} />
-  //   </div>
-  //   <div className={classes.textContainer}>
-  //     <span className={classes.mainText}>{markedValue}</span>
-  //     {value
-  //       && <Tooltip title={helperText} placement='top'>
-  //         <span className={classes.helper}>{helperText}</span>
-  //       </Tooltip>}
-  //   </div>
-  // </div>;
 });

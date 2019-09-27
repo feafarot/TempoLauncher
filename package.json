@@ -1,6 +1,6 @@
 {
   "name": "tempo-launcher",
-  "version": "0.2.3",
+  "version": "0.2.4-beta1",
   "description": "TempoLauncher allow you to find and launch apps on your PC.",
   "license": "MIT",
   "author": {
@@ -12,9 +12,10 @@
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "publish-tool": "powershell -File .\\src\\icon-extractor-tool\\publish.ps1",
     "postinstall": "electron-builder install-app-deps",
-    "pre1test": "webpack --config webpack.tests.js",
-    "test": "jest --watch -o"
+    "test": "jest",
+    "test-w": "jest --watch -o"
   },
   "build": {
     "appId": "tempo-launcher",

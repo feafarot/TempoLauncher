@@ -25,3 +25,8 @@ export function initEnzyme() {
 }
 
 initEnzyme();
+
+export function asMock<T>(obj: T) {
+  // tslint:disable-next-line: no-any
+  return (obj as any) as jest.Mock<T>;
+}

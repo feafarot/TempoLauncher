@@ -1,7 +1,5 @@
-import React, { useLayoutEffect, memo } from 'react';
-import { isArray } from 'util';
+import React, { memo } from 'react';
 import { Paper, List } from '@material-ui/core';
-import { fitContent } from 'shared/utils';
 import { makeStyles } from '@material-ui/styles';
 import { uiConfig } from 'shared/ui-config';
 
@@ -38,14 +36,6 @@ const useStyles = makeStyles({
 
 export const ResultsList: React.FC<ResultsListProps> = memo(({ children, ...props }) => {
   const classes = useStyles();
-  // useLayoutEffect(() => {
-  //   requestAnimationFrame(()=> fitContent());
-  // });
-
-  // if (!isArray(children) || children.length === 0) {
-  //   return null;
-  // }
-
   return <Paper className={classes.menuPaper}>
     <List className={classes.list} dense>
       {children}
