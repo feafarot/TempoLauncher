@@ -4,6 +4,7 @@
   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": ".NET Core Launch (console)",
       "type": "coreclr",
@@ -12,7 +13,6 @@
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/src/icon-extarctor-tool/bin/Debug/netcoreapp3.0/win10-x64/IconExtarctor.dll",
       "args": [
-        "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Visual Studio Code/Visual Studio Code.lnk"
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Accessories/Internet Explorer.lnk",
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Accessories/Notepad.lnk",
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Chrome Apps/Chrome Apps & Extensions Developer Tool.lnk",
@@ -36,6 +36,32 @@
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Viber/Viber.lnk",
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Visual Studio Code/Visual Studio Code.lnk",
         // "C:/Users/feafa/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Windows PowerShell/Windows PowerShell (x86).lnk"
+        "C:/Users/feafa/Desktop/Tools/Change mouse click settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change mouse settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change mouse wheel settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change or remove a program - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change screen saver - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change search options for files and folders - Shortcut.lnk",
+        "C:/Users/feafa/Desktop/Tools/Change security settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change sound card settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change system sounds - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change temporary Internet file settings - Shortcut.lnk",
+        "C:/Users/feafa/Desktop/Tools/Change text to speech settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change the file type associated with a file extension - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change the mouse pointer display or speed - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change the Narrator voice - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change the search provider in Internet Explorer - Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change the time zone - Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change the way currency is displayed - Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change the way dates and lists are displayed - Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change the way measurements are displayed - Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change the way time is displayed ",
+        "- Shortcut.lnk C:/Users/feafa/Desktop/Tools/Change User Account Control settings - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change what closing the lid does - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change what the power buttons do - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change when the computer sleeps - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change Windows To Go startup options - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change workgroup name - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Change your homepage - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Check firewall status - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Check keyboard status - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Check processor speed - Shortcut.lnk ",
+        "C:/Users/feafa/Desktop/Tools/Check security status - Shortcut.lnk",
       ],
       "cwd": "${workspaceFolder}/src/icon-extarctor-tool",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -70,6 +96,23 @@
       "timeout": 50000,
       //"urlFilter": "*localhost:*"
       //"url": "http://localhost:9080"
+    },
+    {
+      "name": "Debug TS tests",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+      //"autoAttachChildProcesses": true,
+      "sourceMaps": true,
+      "args": [
+        //"--inspect-brk",
+        // "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--no-cache"
+      ],
+      "internalConsoleOptions": "neverOpen"
     }
   ],
   "compounds": [

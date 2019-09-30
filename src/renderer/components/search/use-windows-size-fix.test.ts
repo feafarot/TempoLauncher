@@ -1,7 +1,7 @@
 import 'shared/ui-config';
 import { useApiAction } from 'renderer/api';
-import { asMock, act } from 'renderer/utils/test-utils';
-import { renderHook } from '@testing-library/react-hooks';
+import { asMock } from 'renderer/utils/test-utils';
+import { renderHook, act } from '@testing-library/react-hooks';
 import { useWindowsSizeFix } from './search-frame-hooks';
 
 const mockApiRequest = jest.fn();

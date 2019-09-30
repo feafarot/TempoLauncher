@@ -8,7 +8,6 @@ export function initUtilApi(ipcMain: IpcMain) {
     const win = getMainWindow();
     const contentBounds = win.getContentBounds();
     win.setContentBounds({ ...contentBounds, height: rq.height });
-    //win.setMaximumSize(rq.width, rq.height);
     win.setSize(rq.width, rq.height);
   });
 

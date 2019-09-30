@@ -80,8 +80,8 @@ namespace IconExtarctor
                 ?? NormalizeNull(linkObj?.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode)
                 ?? NormalizeNull(linkObj?.LinkInfo?.LocalBasePath)
                 ?? NormalizeNull(linkObj?.StringData?.IconLocation);
-            if (string.IsNullOrEmpty(target) 
-                && linkObj.StringData.NameString.Contains("%windir%\\explorer.exe", StringComparison.InvariantCultureIgnoreCase)) 
+            if (string.IsNullOrEmpty(target)
+                && (linkObj?.StringData?.NameString ?? string.Empty).Contains("%windir%\\explorer.exe", StringComparison.InvariantCultureIgnoreCase))
             {
                 target = "%windir%\\explorer.exe";
             }

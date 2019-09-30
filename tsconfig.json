@@ -14,6 +14,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": false,
+    "sourceMap": true,
     "paths": {},
     "plugins": [
       { "name": "typescript-tslint-plugin" }

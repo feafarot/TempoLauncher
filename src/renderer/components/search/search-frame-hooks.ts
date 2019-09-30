@@ -41,12 +41,14 @@ export function useWindowsSizeFix(resultsLength: number) {
 export function useQuerying() {
   type State = { items: DataItem[]; calc?: string };
   const defaultState: State = { items: [] };
+
   const [query, setQuery] = useState('');
   const [pluginKey, setPluginKey] = useState<string | null>(null);
   const [result, setResult] = useState<State>(defaultState);
   const runSearch = useApiAction(actions.search, resp => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
+
   const debouncedRunSearch = useCallback(debounce(runSearch, 120), []);
   const handleChange = (actionInfo: QueryInputActionInfo) => {
     switch (actionInfo.type) {
