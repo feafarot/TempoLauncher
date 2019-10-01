@@ -2,5 +2,8 @@
     "typescript.preferences.quoteStyle": "single",
     "javascript.preferences.quoteStyle": "single",
     "deepcode.review.results.hideInformationIssues": false,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "[csharp]": {
+      "editor.tabSize": 4
+    }
 }

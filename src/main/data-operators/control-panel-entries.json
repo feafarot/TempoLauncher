@@ -1,0 +1,326 @@
+[
+  {
+    "name": "Action Center",
+    "canonicalName": "Microsoft.ActionCenter",
+    "guid": "BB64F8A7-BEE7-4E1A-AB8D-7D8273F7FDB6",
+    "module": "%SystemRoot%\\System32\\ActionCenterCPL.dll,-1"
+  },
+  {
+    "name": "Administrative Tools",
+    "canonicalName": "Microsoft.AdministrativeTools",
+    "guid": "D20EA4E1-3957-11d2-A40B-0C5020524153",
+    "module": "%SystemRoot%\\system32\\shell32.dll,-22982"
+  },
+  {
+    "name": "AutoPlay",
+    "canonicalName": "Microsoft.AutoPlay",
+    "guid": "9C60DE1E-E5FC-40f4-A487-460851A8D915",
+    "module": "%SystemRoot%\\System32\\autoplay.dll,-1"
+  },
+  {
+    "name": "Biometric Devices",
+    "canonicalName": "Microsoft.BiometricDevices",
+    "guid": "0142e4d0-fb7a-11dc-ba4a-000ffe7ab428",
+    "module": "%SystemRoot%\\System32\\biocpl.dll,-1"
+  },
+  {
+    "name": "BitLocker Drive Encryption",
+    "canonicalName": "Microsoft.BitLockerDriveEncryption",
+    "guid": "D9EF8727-CAC2-4e60-809E-86F80A666C91",
+    "module": "%SystemRoot%\\System32\\fvecpl.dll,-1"
+  },
+  {
+    "name": "Color Management",
+    "canonicalName": "Microsoft.ColorManagement",
+    "guid": "B2C761C6-29BC-4f19-9251-E6195265BAF1",
+    "module": "%systemroot%\\system32\\colorcpl.exe,-6"
+  },
+  {
+    "name": "Credential Manager",
+    "canonicalName": "Microsoft.CredentialManager",
+    "guid": "1206F5F1-0569-412C-8FEC-3204630DFB70",
+    "module": "%SystemRoot%\\system32\\Vault.dll,-1"
+  },
+  {
+    "name": "Date and Time",
+    "canonicalName": "Microsoft.DateAndTime",
+    "guid": "E2E7934B-DCE5-43C4-9576-7FE4F75E7480",
+    "module": "%SystemRoot%\\System32\\timedate.cpl,-51"
+  },
+  {
+    "name": "Default Programs",
+    "canonicalName": "Microsoft.DefaultPrograms",
+    "guid": "17cd9488-1228-4b2f-88ce-4298e93e0966",
+    "module": "%SystemRoot%\\System32\\sud.dll,-1"
+  },
+  {
+    "name": "Device Manager",
+    "canonicalName": "Microsoft.DeviceManager",
+    "guid": "74246bfc-4c96-11d0-abef-0020af6b0b7a",
+    "module": "%SystemRoot%\\System32\\devmgr.dll,-4"
+  },
+  {
+    "name": "Devices and Printers",
+    "canonicalName": "Microsoft.DevicesAndPrinters",
+    "guid": "A8A91A66-3A7D-4424-8D24-04E180695C7A",
+    "module": "%systemroot%\\system32\\DeviceCenter.dll,-1000"
+  },
+  {
+    "name": "Display",
+    "canonicalName": "Microsoft.Display",
+    "guid": "C555438B-3C23-4769-A71F-B6D3D9B6053A",
+    "module": "%SystemRoot%\\System32\\Display.dll,-1"
+  },
+  {
+    "name": "Ease of Access Center",
+    "canonicalName": "Microsoft.EaseOfAccessCenter",
+    "guid": "D555645E-D4F8-4c29-A827-D93C859C4F2A",
+    "module": "%SystemRoot%\\System32\\accessibilitycpl.dll,-10"
+  },
+  {
+    "name": "Family Safety",
+    "canonicalName": "Microsoft.ParentalControls",
+    "guid": "96AE8D84-A250-4520-95A5-A47A7E3C548B",
+    "module": "%SystemRoot%\\System32\\wpccpl.dll,-100"
+  },
+  {
+    "name": "File History",
+    "canonicalName": "Microsoft.FileHistory",
+    "guid": "F6B6E965-E9B2-444B-9286-10C9152EDBC5",
+    "module": "%SystemRoot%\\System32\\fhcpl.dll,-52"
+  },
+  {
+    "name": "Folder Options",
+    "canonicalName": "Microsoft.FolderOptions",
+    "guid": "6DFD7C5C-2451-11d3-A299-00C04F8EF6AF",
+    "module": "%SystemRoot%\\system32\\shell32.dll,-22985"
+  },
+  {
+    "name": "Fonts",
+    "canonicalName": "Microsoft.Fonts",
+    "guid": "93412589-74D4-4E4E-AD0E-E0CB621440FD",
+    "module": "%SystemRoot%\\System32\\FontExt.dll,-8007"
+  },
+  {
+    "name": "HomeGroup",
+    "canonicalName": "Microsoft.HomeGroup",
+    "guid": "67CA7650-96E6-4FDD-BB43-A8E774F73A57",
+    "module": "%SystemRoot%\\System32\\hgcpl.dll,-1"
+  },
+  {
+    "name": "Indexing Options",
+    "canonicalName": "Microsoft.IndexingOptions",
+    "guid": "87D66A43-7B11-4A28-9811-C86EE395ACF7",
+    "module": "%SystemRoot%\\System32\\srchadmin.dll,-601"
+  },
+  {
+    "name": "Infrared",
+    "canonicalName": "Microsoft.Infrared",
+    "guid": "A0275511-0E86-4ECA-97C2-ECD8F1221D08",
+    "module": "%SystemRoot%\\System32\\irprops.cpl,-1"
+  },
+  {
+    "name": "Internet Options",
+    "canonicalName": "Microsoft.InternetOptions",
+    "guid": "A3DD4F92-658A-410F-84FD-6FBBBEF2FFFE",
+    "module": "C:\\\\Windows\\\\System32\\\\inetcpl.cpl,-4312"
+  },
+  {
+    "name": "iSCSI Initiator",
+    "canonicalName": "Microsoft.iSCSIInitiator",
+    "guid": "A304259D-52B8-4526-8B1A-A1D6CECC8243",
+    "module": "%SystemRoot%\\System32\\iscsicpl.dll,-5001"
+  },
+  {
+    "name": "iSNS Server",
+    "canonicalName": "Microsoft.iSNSServer",
+    "guid": "0D2A3442-5181-4E3A-9BD4-83BD10AF3D76",
+    "module": "%SystemRoot%\\System32\\isnssrv.dll,-5005"
+  },
+  {
+    "name": "Keyboard",
+    "canonicalName": "Microsoft.Keyboard",
+    "guid": "725BE8F7-668E-4C7B-8F90-46BDB0936430",
+    "module": "%SystemRoot%\\System32\\main.cpl,-102"
+  },
+  {
+    "name": "Location Settings",
+    "canonicalName": "Microsoft.LocationSettings",
+    "guid": "E9950154-C418-419e-A90A-20C5287AE24B",
+    "module": "%SystemRoot%\\System32\\SensorsCpl.dll,-1"
+  },
+  {
+    "name": "Mouse",
+    "canonicalName": "Microsoft.Mouse",
+    "guid": "6C8EEC18-8D75-41B2-A177-8831D59D2D50",
+    "module": "%SystemRoot%\\System32\\main.cpl,-100"
+  },
+  {
+    "name": "MPIOConfiguration",
+    "canonicalName": "Microsoft.MPIOConfiguration",
+    "guid": "AB3BE6AA-7561-4838-AB77-ACF8427DF426",
+    "module": "%SystemRoot%\\System32\\mpiocpl.dll,-1000"
+  },
+  {
+    "name": "Network and Sharing Center",
+    "canonicalName": "Microsoft.NetworkAndSharingCenter",
+    "guid": "8E908FC9-BECC-40f6-915B-F4CA0E70D03D",
+    "module": "%SystemRoot%\\System32\\netcenter.dll,-1"
+  },
+  {
+    "name": "Notification Area Icons",
+    "canonicalName": "Microsoft.NotificationAreaIcons",
+    "guid": "05d7b0f4-2121-4eff-bf6b-ed3f69b894d9",
+    "module": "%SystemRoot%\\System32\\taskbarcpl.dll,-1"
+  },
+  {
+    "name": "Pen and Touch",
+    "canonicalName": "Microsoft.PenAndTouch",
+    "guid": "F82DF8F7-8B9F-442E-A48C-818EA735FF9B",
+    "module": "%SystemRoot%\\System32\\tabletpc.cpl,-10103"
+  },
+  {
+    "name": "Personalization",
+    "canonicalName": "Microsoft.Personalization",
+    "guid": "ED834ED6-4B5A-4bfe-8F11-A626DCB6A921",
+    "module": "%SystemRoot%\\System32\\themecpl.dll,-1"
+  },
+  {
+    "name": "Phone and Modem",
+    "canonicalName": "Microsoft.PhoneAndModem",
+    "guid": "40419485-C444-4567-851A-2DD7BFA1684D",
+    "module": "%SystemRoot%\\System32\\telephon.cpl,-1"
+  },
+  {
+    "name": "Power Options",
+    "canonicalName": "Microsoft.PowerOptions",
+    "guid": "025A5937-A6BE-4686-A844-36FE4BEC8B6D",
+    "module": "%SystemRoot%\\System32\\powercpl.dll,-1"
+  },
+  {
+    "name": "Programs and Features",
+    "canonicalName": "Microsoft.ProgramsAndFeatures",
+    "guid": "7b81be6a-ce2b-4676-a29e-eb907a5126c5",
+    "module": "%systemroot%\\system32\\appwiz.cpl,-159"
+  },
+  {
+    "name": "Recovery",
+    "canonicalName": "Microsoft.Recovery",
+    "guid": "9FE63AFD-59CF-4419-9775-ABCC3849F861",
+    "module": "%SystemRoot%\\System32\\recovery.dll,-101"
+  },
+  {
+    "name": "Region",
+    "canonicalName": "Microsoft.RegionAndLanguage",
+    "guid": "62D8ED13-C9D0-4CE8-A914-47DD628FB1B0",
+    "module": "%SystemRoot%\\System32\\intl.cpl,-1"
+  },
+  {
+    "name": "RemoteApp and Desktop Connections",
+    "canonicalName": "Microsoft.RemoteAppAndDesktopConnections",
+    "guid": "241D7C96-F8BF-4F85-B01F-E2B043341A4B",
+    "module": "%SystemRoot%\\System32\\tsworkspace.dll,-15300"
+  },
+  {
+    "name": "Sound",
+    "canonicalName": "Microsoft.Sound",
+    "guid": "F2DDFC82-8F12-4CDD-B7DC-D4FE1425AA4D",
+    "module": "%SystemRoot%\\System32\\mmsys.cpl,-300"
+  },
+  {
+    "name": "Speech Recognition",
+    "canonicalName": "Microsoft.SpeechRecognition",
+    "guid": "58E3C745-D971-4081-9034-86E34B30836A",
+    "module": "%SystemRoot%\\System32\\Speech\\SpeechUX\\speechuxcpl.dll,-1"
+  },
+  {
+    "name": "Storage Spaces",
+    "canonicalName": "Microsoft.StorageSpaces",
+    "guid": "F942C606-0914-47AB-BE56-1321B8035096",
+    "module": "C:\\\\Windows\\\\System32\\\\SpaceControl.dll,-1"
+  },
+  {
+    "name": "Sync Center",
+    "canonicalName": "Microsoft.SyncCenter",
+    "guid": "9C73F5E5-7AE7-4E32-A8E8-8D23B85255BF",
+    "module": "%SystemRoot%\\System32\\SyncCenter.dll,-3000"
+  },
+  {
+    "name": "System",
+    "canonicalName": "Microsoft.System",
+    "guid": "BB06C0E4-D293-4f75-8A90-CB05B6477EEE",
+    "module": "%SystemRoot%\\System32\\systemcpl.dll,-1"
+  },
+  {
+    "name": "Tablet PC Settings",
+    "canonicalName": "Microsoft.TabletPCSettings",
+    "guid": "80F3F1D5-FECA-45F3-BC32-752C152E456E",
+    "module": "%SystemRoot%\\System32\\tabletpc.cpl,-10100"
+  },
+  {
+    "name": "Taskbar and Navigation",
+    "canonicalName": "Microsoft.Taskbar",
+    "guid": "0DF44EAA-FF21-4412-828E-260A8728E7F1",
+    "module": "%SystemRoot%\\system32\\shell32.dll,-32517"
+  },
+  {
+    "name": "Troubleshooting",
+    "canonicalName": "Microsoft.Troubleshooting",
+    "guid": "C58C4893-3BE0-4B45-ABB5-A63E4B8C8651",
+    "module": "%SystemRoot%\\System32\\DiagCpl.dll,-1"
+  },
+  {
+    "name": "TSAppInstall",
+    "canonicalName": "Microsoft.TSAppInstall",
+    "guid": "BAA884F4-3432-48b8-AA72-9BF20EEF31D5",
+    "module": "%systemroot%\\system32\\tsappinstall.exe,-2001"
+  },
+  {
+    "name": "User Accounts",
+    "canonicalName": "Microsoft.UserAccounts",
+    "guid": "60632754-c523-4b62-b45c-4172da012619",
+    "module": "%SystemRoot%\\System32\\usercpl.dll,-1"
+  },
+  {
+    "name": "Windows Anytime Upgrade",
+    "canonicalName": "Microsoft.WindowsAnytimeUpgrade",
+    "guid": "BE122A0E-4503-11DA-8BDE-F66BAD1E3F3A",
+    "module": "$(resourceString._SYS_MOD_PATH),-1"
+  },
+  {
+    "name": "Windows Defender",
+    "canonicalName": "Microsoft.WindowsDefender",
+    "guid": "D8559EB9-20C0-410E-BEDA-7ED416AECC2A",
+    "module": "%ProgramFiles%\\Windows Defender\\MsMpRes.dll,-104"
+  },
+  {
+    "name": "Windows Firewall",
+    "canonicalName": "Microsoft.WindowsFirewall",
+    "guid": "4026492F-2F69-46B8-B9BF-5654FC07E423",
+    "module": "C:\\\\Windows\\\\system32\\\\FirewallControlPanel.dll,-12122"
+  },
+  {
+    "name": "Windows Mobility Center",
+    "canonicalName": "Microsoft.MobilityCenter",
+    "guid": "5ea4f148-308c-46d7-98a9-49041b1dd468",
+    "module": "%SystemRoot%\\system32\\mblctr.exe,-1002"
+  },
+  {
+    "name": "Windows To Go",
+    "canonicalName": "Microsoft.PortableWorkspaceCreator",
+    "guid": "8E0C279D-0BD1-43C3-9EBD-31C3DC5B8A77",
+    "module": "%SystemRoot%\\System32\\pwcreator.exe,-151"
+  },
+  {
+    "name": "Windows Update",
+    "canonicalName": "Microsoft.WindowsUpdate",
+    "guid": "36eef7db-88ad-4e81-ad49-0e313f0c35f8",
+    "module": "%SystemRoot%\\system32\\wucltux.dll,-1"
+  },
+  {
+    "name": "Work Folders",
+    "canonicalName": "Microsoft.WorkFolders",
+    "guid": "ECDB0924-4208-451E-8EE0-373C0956DE16",
+    "module": "C:\\\\Windows\\\\System32\\\\WorkfoldersControl.dll,-1"
+  }
+]

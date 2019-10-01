@@ -4,7 +4,9 @@ import { app } from 'electron';
 import { EOL } from 'os';
 import { isDev } from 'main/main-utils';
 
+const fileNotFoundIconResponse = '--FNF--';
 const MaxCmdArgsLength = 2300;
+
 function getArgumentBatches(paths: string[]) {
   let curretLength = 0;
   let batches: string[][] = [[]];
@@ -26,7 +28,7 @@ function getArgumentBatches(paths: string[]) {
 function getToolPaths() {
   let toolPath = path.resolve(process.resourcesPath!, 'tools/icon-extractor');
   if (isDev()) {
-    toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win10-x64/publish');
+    toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win-x64/publish');
   }
 
   return {
@@ -54,5 +56,6 @@ function extractIconsInternal(paths: string[]) {
 
 export function extractIcons(paths: string[]) {
   const batches = getArgumentBatches(paths);
-  return Promise.all(batches.map(x => extractIconsInternal(x))).then(x => x.flatMap(y => y));
+  return Promise.all(batches.map(x => extractIconsInternal(x)))
+    .then(x => x.flatMap(y => y).map(icon => icon === fileNotFoundIconResponse ? null : icon));
 }

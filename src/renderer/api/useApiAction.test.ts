@@ -66,6 +66,7 @@ describe('useApiAction hook', () => {
   it('Should send request and recieve result', async () => {
     const [callbackPromise, resolveCallback] = createPuppetPromise();
     callbackMock.mockImplementationOnce(() => resolveCallback());
+
     const { result } = renderHook(() => useApiAction(testAction, callbackMock));
     act(() => {
       result.current({ value: 't1' });

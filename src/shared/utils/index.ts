@@ -13,3 +13,14 @@ export function fitContent() {
 export function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+export function createControlledPromise<T>() {
+  let resolve: ((value: T) => void) | null = null;
+  // tslint:disable-next-line: no-any
+  let rejesct: ((reason: any) => void) | null = null;
+  const promise = new Promise<T>((rs, rj) => {
+    resolve = rs;
+    rejesct = rj;
+  });
+  return [promise, resolve!, rejesct!] as const;
+}

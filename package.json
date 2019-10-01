@@ -15,7 +15,8 @@
     "publish-tool": "powershell -File .\\src\\icon-extractor-tool\\publish.ps1",
     "postinstall": "electron-builder install-app-deps",
     "test": "jest",
-    "test-w": "jest --watch -o"
+    "test-w": "jest --watch -o",
+    "grab-cp": "ts-node ./src/main/data-operators/control-panel-fetch-tool.ts -O '{\"module\": \"commonjs\", \"target\": \"es2015\"}' --skip-project"
   },
   "build": {
     "appId": "tempo-launcher",
@@ -33,7 +34,7 @@
     },
     "extraResources": [
       {
-        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win10-x64/publish",
+        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win-x64/publish",
         "to": "tools/icon-extractor",
         "filter": [
           "**/*"
@@ -59,30 +60,35 @@
     "@material-ui/core": "^4.4.3",
     "@material-ui/icons": "^4.4.3",
     "@material-ui/styles": "^4.4.3",
-    "@types/auto-launch": "^5.0.1",
-    "@types/lodash": "^4.14.139",
     "auto-launch": "^5.0.5",
-    "date-fns": "^2.3.0",
+    "date-fns": "^2.4.1",
     "electron-log": "^3.0.8",
     "electron-store": "^5.0.0",
     "electron-unhandled": "^3.0.0",
     "globby": "^10.0.1",
     "lodash": "^4.17.15",
     "mathjs": "^6.2.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
     "rxjs": "^6.5.3",
     "source-map-support": "^0.5.13",
-    "typeface-roboto": "^0.0.75"
+    "typeface-roboto": "^0.0.75",
+    "winreg": "^1.2.4"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^2.0.1",
+    "@types/auto-launch": "^5.0.1",
+    "@types/cheerio": "^0.22.13",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.141",
     "@types/mathjs": "^6.0.2",
-    "@types/react": "^16.9.2",
-    "@types/react-dom": "^16.9.0",
+    "@types/react": "^16.9.4",
+    "@types/react-dom": "^16.9.1",
+    "@types/request-promise-native": "^1.0.17",
+    "@types/winreg": "^1.2.30",
+    "cheerio": "^1.0.0-rc.3",
     "electron": "6.0.0-beta.13",
     "electron-builder": "^21.2.0",
     "electron-webpack": "^2.7.4",
@@ -91,6 +97,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
+    "request-promise-native": "^1.0.7",
     "ts-jest": "^24.1.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslint": "^5.20.0",
