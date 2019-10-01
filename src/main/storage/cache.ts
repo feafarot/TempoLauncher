@@ -24,16 +24,25 @@ export interface ResultItemLaunchStat {
   lastLaunchDate: number;
 }
 
+export interface ControlPanelItemInfo {
+  name: string;
+  canonicalName: string;
+  guid: string;
+  base64Icon?: string;
+}
+
 export interface AppCacheStore {
   files: FileInfo[];
   launchStats: ResultLaunchStats;
+  controlPanelEntries: ControlPanelItemInfo[];
 }
 
 export class AppCacheStorage extends LocalStorage<AppCacheStore> {}
 
 const defaultCache: AppCacheStore = {
   files: [],
-  launchStats: {}
+  launchStats: {},
+  controlPanelEntries: [],
 };
 
 const cacheSchema: StoreSchema<AppCacheStore> = {
@@ -71,6 +80,20 @@ const cacheSchema: StoreSchema<AppCacheStore> = {
             }
           }
         }
+      }
+    }
+  },
+  controlPanelEntries: {
+    type: 'array',
+    default: defaultCache.controlPanelEntries,
+    items: {
+      type: 'object',
+      required: ['name', 'canonicalName', 'guid'],
+      properties: {
+        name: { type: 'string' },
+        canonicalName: { type: 'string' },
+        guid: { type: 'string' },
+        iconPath: { type: 'string' }
       }
     }
   }

@@ -10,6 +10,9 @@ export class Indexer<T> {
     private indexBuilder: IndexBuilder<T>,
     private saveCache: (data: T[]) => Promise<void>,
     private getCache: () => Promise<T[]>) {
+    this.getCache().then(initCache => {
+      this.inMemoryCache = initCache;
+    });
   }
 
   async indexData() {

@@ -6,15 +6,32 @@ import { basename, extname, dirname } from 'path';
 import { cache, settings } from 'main/storage';
 import { CurrentUserReplacementKey } from 'main/constants';
 import { userInfo } from 'os';
+import { Indexer } from './indexer';
 
 const cacheStorageKey = 'files';
 
 export class FileIndexerService {
-  private _indexingInProgress = false;
-  private memoryFilesCache: FileInfo[] | null = null;
+  private indexer: Indexer<FileInfo>;
 
   constructor(private cacheStorage: AppCacheStorage, private settingsStorage: SettingsStorage) {
-    this.memoryFilesCache = this.cacheStorage.get(cacheStorageKey);
+    this.indexer = new Indexer<FileInfo>(
+      async () => {
+        const files = await globby(this.patterns, { suppressErrors: true });
+        const icons = await extractIcons(files);
+        const data = files.map<FileInfo>((x, i) => {
+          const ext = extname(x);
+          return {
+            fullPath: x,
+            fileName: basename(x).replace(new RegExp(`\\${ext}$`), ''),
+            dirName: dirname(x),
+            extension: ext,
+            base64Icon: icons[i] || undefined
+          };
+        });
+        return data;
+      },
+      async data => this.cacheStorage.set(cacheStorageKey, data),
+      async () => this.cacheStorage.get(cacheStorageKey));
   }
 
   private get patterns() {
@@ -24,50 +41,12 @@ export class FileIndexerService {
       .map(x => `${x.pattern.replace(CurrentUserReplacementKey, userName)}*.{${x.extensions}}`);
   }
 
-  private updateCache(data: FileInfo[]) {
-    this.cacheStorage.set(cacheStorageKey, data);
-    this.memoryFilesCache = data;
-  }
-
-  private getFromCache() {
-    if (!this.memoryFilesCache) {
-      this.memoryFilesCache = this.cacheStorage.get(cacheStorageKey);
-    }
-
-    return this.memoryFilesCache;
-  }
-
-  get indexingInProgress() {
-    return this._indexingInProgress;
-  }
-
   async indexFiles() {
-    this._indexingInProgress = true;
-    const files = await globby(this.patterns, { suppressErrors: true });
-    const icons = await extractIcons(files);
-    const preparedCache = files
-      .map<FileInfo>((x, i) => {
-        const ext = extname(x);
-        return {
-          fullPath: x,
-          fileName: basename(x).replace(new RegExp(`\\${ext}$`), ''),
-          dirName: dirname(x),
-          extension: ext,
-          base64Icon: icons[i] || undefined
-        };
-      });
-    this.updateCache(preparedCache);
-    this._indexingInProgress = false;
-    return preparedCache;
+    return await this.indexer.indexData();
   }
 
   async getFiles(forceReindex: boolean = false) {
-    let files = this.getFromCache();
-    if (forceReindex || files == null || files.length === 0) {
-      files = await this.indexFiles();
-    }
-
-    return files;
+    return await this.indexer.getData(forceReindex);
   }
 }
 
