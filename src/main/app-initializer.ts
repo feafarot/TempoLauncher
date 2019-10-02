@@ -14,7 +14,11 @@ function initTray(refWindow: BrowserWindow) {
   tray.on('click', () => {
     refWindow.isVisible() ? refWindow.hide() : refWindow.show();
   });
-  const trayMenu = Menu.buildFromTemplate([{ label: 'Exit', type: 'normal', click: () => app.quit() }]);
+  const trayMenu = Menu.buildFromTemplate([
+    { label: `v.${app.getVersion()}`, type: 'normal', enabled: false },
+    { type: 'separator' },
+    { label: 'Quit', type: 'normal', role: 'quit', click: () => app.quit() }
+  ]);
   tray.setContextMenu(trayMenu);
   return tray;
 }

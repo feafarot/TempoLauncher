@@ -10,6 +10,7 @@ export class ControlPanelDataProvider implements DataOperator {
     return controlPanelItems.map<SearchableItem>((x, i) => {
       return {
         displayText: x.name,
+        secondaryText: `Control Panel > ${x.name}`,
         value: x.canonicalName,
         icon: x.base64Icon
       };

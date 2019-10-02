@@ -9,6 +9,7 @@ export interface SearchRequest {
 export interface DataItem {
   id: string;
   display: string;
+  secondaryText?: string;
   value?: string;
   icon?: string;
   matches?: TextMatch[];

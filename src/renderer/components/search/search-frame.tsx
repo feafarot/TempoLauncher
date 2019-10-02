@@ -99,7 +99,7 @@ export const SearchFrame: React.FC = memo(() => {
             icon={x.icon}
             matches={x.matches}
             value={x.display}
-            helperText={x.value}
+            helperText={x.secondaryText || x.value}
             onClick={launchSelected} />)} />
     </div>
   </Configurator>;

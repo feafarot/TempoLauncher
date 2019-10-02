@@ -1,6 +1,7 @@
 export interface SearchableItem {
   displayText: string;
   value: string;
+  secondaryText?: string;
   icon?: string;
 }
 

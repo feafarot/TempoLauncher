@@ -33,6 +33,7 @@ export function initSearchApi(ipcMain: IpcMain) {
       items: files.map<DataItem>(x => ({
         id: x.id,
         display: x.displayText,
+        secondaryText: x.secondaryText,
         value: x.value,
         icon: x.icon,
         matches: x.matches
