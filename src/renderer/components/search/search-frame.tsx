@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { makeStyles, Paper } from '@material-ui/core';
+import { makeStyles, Paper, Collapse } from '@material-ui/core';
 import { QueryInput } from '../query-input';
 import { ResultsList } from '../results-list';
 import { uiConfig } from '../../../shared/ui-config';
@@ -9,9 +9,12 @@ import { actions } from 'shared/contracts/actions';
 import { ResultListItem } from '../result-list-item';
 import { useSelectionControl, useWindowsSizeFix, useQuerying } from './search-frame-hooks';
 
+const mainGlowSize = 4;
+
 const useStyles = makeStyles({
   root: {
-    overflow: 'hidden'
+    overflow: 'hidden',
+    padding: mainGlowSize
   },
   mainFrame: {
     position: 'fixed',
@@ -19,10 +22,11 @@ const useStyles = makeStyles({
     overflow: 'hidden',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: uiConfig.appWidth,
-    minHeight: uiConfig.appIdleHeight,
+    width: uiConfig.appWidth - mainGlowSize * 2,
+    minHeight: uiConfig.appIdleHeight - mainGlowSize * 2,
     zIndex: 100,
-    '-webkit-app-region': 'drag'
+    '-webkit-app-region': 'drag',
+    boxShadow: `0px 0px ${mainGlowSize}px 0px #0089ffbf`
   },
   query: {
     display: 'flex',
