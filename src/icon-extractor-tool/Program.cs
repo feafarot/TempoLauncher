@@ -27,6 +27,8 @@ namespace IconExtarctor
 
     class Program
     {
+        const string fileNotFound = "--FNF--";
+
         static List<IntPtr> _iconsToDestroy = new List<IntPtr>();
 
         static void Main(string[] args)
@@ -57,6 +59,11 @@ namespace IconExtarctor
             {
                 target = GetShortcutTarget(path);
             }
+            Path.GetFullPath(path);
+            if (target == null)
+            {
+                return fileNotFound;
+            }
 
             if (target.StartsWith("%"))
             {
@@ -80,7 +87,7 @@ namespace IconExtarctor
             }
             catch (FileNotFoundException)
             {
-                base64Icon = "--FNF--";
+                base64Icon = fileNotFound;
             }
 
             return base64Icon;

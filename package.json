@@ -34,7 +34,7 @@
     },
     "extraResources": [
       {
-        "from": "src/icon-extarctor-tool/bin/Release/netcoreapp3.0/win-x64/publish",
+        "from": "src/icon-extractor-tool/bin/Release/netcoreapp3.0/win-x64/publish",
         "to": "tools/icon-extractor",
         "filter": [
           "**/*"
