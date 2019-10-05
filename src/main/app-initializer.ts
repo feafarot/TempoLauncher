@@ -3,11 +3,16 @@ import { resolve, join } from 'path';
 import { format as formatUrl } from 'url';
 import { isDev } from './main-utils';
 import { uiConfig } from 'shared/ui-config';
+import { cache } from './storage';
 
 const isDevelopment = isDev();
 const icon = resolve(__static, 'icon.png');
 let mainWindow: BrowserWindow | null = null;
 let mainTray: Tray | null = null;
+
+function getSavedLocation() {
+  return cache.get('windowLocation') || {};
+}
 
 function initTray(refWindow: BrowserWindow) {
   const tray = new Tray(icon);
@@ -24,6 +29,7 @@ function initTray(refWindow: BrowserWindow) {
 }
 
 function createMainWindowWithTray() {
+  const winLocation = getSavedLocation();
   const window = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true
@@ -36,6 +42,7 @@ function createMainWindowWithTray() {
     height: uiConfig.appIdleHeight,
     minHeight: uiConfig.appIdleHeight,
     resizable: false,
+    ...winLocation
   });
 
   if (isDevelopment) {
@@ -53,6 +60,11 @@ function createMainWindowWithTray() {
       })
     );
   }
+
+  window.on('close', () => {
+    const { x, y } = mainWindow!.getBounds();
+    cache.set('windowLocation', { x, y });
+  });
 
   window.on('closed', () => {
     mainWindow = null; // TODO: remove sideeffect

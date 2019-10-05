@@ -31,10 +31,16 @@ export interface ControlPanelItemInfo {
   base64Icon?: string;
 }
 
+export interface WindowLocation {
+  x?: number;
+  y?: number;
+}
+
 export interface AppCacheStore {
   files: FileInfo[];
   launchStats: ResultLaunchStats;
   controlPanelEntries: ControlPanelItemInfo[];
+  windowLocation: WindowLocation;
 }
 
 export class AppCacheStorage extends LocalStorage<AppCacheStore> {}
@@ -43,6 +49,7 @@ const defaultCache: AppCacheStore = {
   files: [],
   launchStats: {},
   controlPanelEntries: [],
+  windowLocation: {}
 };
 
 const cacheSchema: StoreSchema<AppCacheStore> = {
@@ -95,6 +102,13 @@ const cacheSchema: StoreSchema<AppCacheStore> = {
         guid: { type: 'string' },
         iconPath: { type: 'string' }
       }
+    }
+  },
+  windowLocation: {
+    type: 'object',
+    properties: {
+      x: { type: 'number' },
+      y: { type: 'number' }
     }
   }
 };
