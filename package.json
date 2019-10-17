@@ -1,6 +1,6 @@
 {
   "name": "tempo-launcher",
-  "version": "0.3.1-beta1",
+  "version": "0.4.0",
   "description": "TempoLauncher allow you to find and launch apps on your PC.",
   "license": "MIT",
   "author": {
@@ -34,7 +34,7 @@
     },
     "extraResources": [
       {
-        "from": "src/icon-extractor-tool/bin/Release/netcoreapp3.0/win-x64/publish",
+        "from": "src/icon-extractor-tool-fs/bin/Release/netcoreapp3.0/win-x64/publish",
         "to": "tools/icon-extractor",
         "filter": [
           "**/*"
@@ -47,7 +47,9 @@
     "title": "TempoLauncher",
     "whiteListedModules": [
       "@material-ui/styles",
-      "@material-ui/core"
+      "@material-ui/core",
+      "@material-ui/icons",
+      "formik"
     ],
     "renderer": {
       "webpackConfig": "webpack.customizations.js"
@@ -65,6 +67,7 @@
     "electron-log": "^3.0.8",
     "electron-store": "^5.0.0",
     "electron-unhandled": "^3.0.0",
+    "formik": "2.0.1-rc.13",
     "globby": "^10.0.1",
     "lodash": "^4.17.15",
     "mathjs": "^6.2.2",
@@ -73,7 +76,8 @@
     "rxjs": "^6.5.3",
     "source-map-support": "^0.5.13",
     "typeface-roboto": "^0.0.75",
-    "winreg": "^1.2.4"
+    "winreg": "^1.2.4",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^2.0.1",
@@ -88,6 +92,7 @@
     "@types/react-dom": "^16.9.1",
     "@types/request-promise-native": "^1.0.17",
     "@types/winreg": "^1.2.30",
+    "@types/yup": "^0.26.24",
     "cheerio": "^1.0.0-rc.3",
     "electron": "6.0.0-beta.13",
     "electron-builder": "^21.2.0",

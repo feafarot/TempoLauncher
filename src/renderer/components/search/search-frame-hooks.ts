@@ -4,7 +4,7 @@ import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
 import { uiConfig } from 'shared/ui-config';
 import { debounce } from 'lodash';
-import { QueryInputActionInfo, QueryInputActionType } from '../query-input';
+import { QueryInputActionInfo, QueryInputActionType } from './query-input';
 
 export function useSelectionControl(items: DataItem[]) {
   const [selectedIndex, setSelectedIndex] = useState(0);

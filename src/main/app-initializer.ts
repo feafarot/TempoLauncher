@@ -4,20 +4,26 @@ import { format as formatUrl } from 'url';
 import { isDev } from './main-utils';
 import { uiConfig } from 'shared/ui-config';
 import { cache } from './storage';
+import { windows } from './windows';
+import { sendCloseNotification } from './api';
 
 const isDevelopment = isDev();
 const icon = resolve(__static, 'icon.png');
-let mainWindow: BrowserWindow | null = null;
 let mainTray: Tray | null = null;
 
 function getSavedLocation() {
   return cache.get('windowLocation') || {};
 }
 
+function hideWindow(wnd: BrowserWindow) {
+  wnd.hide();
+  sendCloseNotification();
+}
+
 function initTray(refWindow: BrowserWindow) {
   const tray = new Tray(icon);
   tray.on('click', () => {
-    refWindow.isVisible() ? refWindow.hide() : refWindow.show();
+    refWindow.isVisible() ? hideWindow(refWindow) : refWindow.show();
   });
   const trayMenu = Menu.buildFromTemplate([
     { label: `v.${app.getVersion()}`, type: 'normal', enabled: false },
@@ -62,12 +68,12 @@ function createMainWindowWithTray() {
   }
 
   window.on('close', () => {
-    const { x, y } = mainWindow!.getBounds();
+    const { x, y } = window!.getBounds();
     cache.set('windowLocation', { x, y });
   });
 
   window.on('closed', () => {
-    mainWindow = null; // TODO: remove sideeffect
+    windows.main = null; // TODO: remove sideeffect
   });
 
   window.webContents.on('devtools-opened', () => {
@@ -80,12 +86,14 @@ function createMainWindowWithTray() {
   // tslint:disable-next-line: no-any
   window.on('minimize', (e: any) => {
     e.preventDefault();
-    window.hide();
+    hideWindow(window);
+    sendCloseNotification();
   });
 
   window.on('blur', () => {
     if (!isDevelopment) {
-      window.hide();
+      hideWindow(window);
+      sendCloseNotification();
     }
   });
 
@@ -95,11 +103,11 @@ function createMainWindowWithTray() {
 
 export function initializeApp() {
   const initRes = createMainWindowWithTray();
-  mainWindow = initRes.window;
+  windows.main = initRes.window;
   mainTray = initRes.tray;
-  return mainWindow;
+  return windows.main;
 }
 
 export function getMainWindow() {
-  return mainWindow!;
+  return windows.main!;
 }

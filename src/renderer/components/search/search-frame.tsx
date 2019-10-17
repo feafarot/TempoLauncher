@@ -1,17 +1,20 @@
 import React, { memo } from 'react';
-import { makeStyles, Paper, Collapse } from '@material-ui/core';
-import { QueryInput } from '../query-input';
+import { makeStyles, Paper, Collapse, IconButton, createStyles } from '@material-ui/core';
+import { QueryInput } from './query-input';
 import { ResultsList } from '../results-list';
 import { uiConfig } from '../../../shared/ui-config';
 import { Configurator } from '../configurator';
-import { useApiAction } from 'renderer/api';
+import { useApiAction, useApiListener } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
 import { ResultListItem } from '../result-list-item';
 import { useSelectionControl, useWindowsSizeFix, useQuerying } from './search-frame-hooks';
+import SettingsIcon from '@material-ui/icons/Settings';
+import { useRouter, Frame } from '../frame-router';
+import { grey } from '@material-ui/core/colors';
 
 const mainGlowSize = 4;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => createStyles({
   root: {
     overflow: 'hidden',
     padding: mainGlowSize
@@ -26,7 +29,18 @@ const useStyles = makeStyles({
     minHeight: uiConfig.appIdleHeight - mainGlowSize * 2,
     zIndex: 100,
     '-webkit-app-region': 'drag',
-    boxShadow: `0px 0px ${mainGlowSize}px 0px #0089ffbf`
+    boxShadow: `0px 0px ${mainGlowSize}px 0px ${theme.palette.primary.dark}`
+  },
+  settings: {
+    position: 'absolute',
+    top: 1,
+    right: 1,
+    color: grey[800],
+    zIndex: 200,
+    '-webkit-app-region': 'no-drag',
+    '&:hover': {
+      color: theme.palette.primary.light
+    }
   },
   query: {
     display: 'flex',
@@ -41,7 +55,7 @@ const useStyles = makeStyles({
     fontSize: '11px',
     bottom: 6
   }
-});
+}));
 
 export const SearchFrame: React.FC = memo(() => {
   const classes = useStyles();
@@ -53,8 +67,12 @@ export const SearchFrame: React.FC = memo(() => {
       selection.reset();
     }
   });
+  const switchFrame = useRouter();
   const requestMinimize = useApiAction(actions.minimize, () => { });
   useWindowsSizeFix(result.items.length);
+  useApiListener(actions.appMinimizedByBlur, async () => {
+    resetData();
+  });
 
   function launchSelected() {
     const targetId = result.items[selection.selectedIndex].id;
@@ -90,6 +108,9 @@ export const SearchFrame: React.FC = memo(() => {
           {result.calc
             && <span className={classes.mathReslut}> = {result.calc}</span>}
         </div>
+        <IconButton className={classes.settings} size='small' onClick={() => switchFrame(Frame.settings)}>
+          <SettingsIcon fontSize='inherit' />
+        </IconButton>
       </Paper>
       <ResultsList
         children={result.items.map((x, i) =>

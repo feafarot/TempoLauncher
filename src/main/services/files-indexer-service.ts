@@ -3,7 +3,7 @@ import { AppCacheStorage, FileInfo } from 'main/storage/cache';
 import { globby } from 'shared/utils/import-normalize';
 import { extractIcons } from 'main/icon-extractor';
 import { basename, extname, dirname } from 'path';
-import { cache, settings } from 'main/storage';
+import { cache, appSettings } from 'main/storage';
 import { CurrentUserReplacementKey } from 'main/constants';
 import { userInfo } from 'os';
 import { Indexer } from './indexer';
@@ -50,4 +50,4 @@ export class FileIndexerService {
   }
 }
 
-export const fileIndexer = new FileIndexerService(cache, settings);
+export const fileIndexer = new FileIndexerService(cache, appSettings);

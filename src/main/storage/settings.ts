@@ -1,16 +1,9 @@
 import Store, { Options } from 'electron-store';
 import { LocalStorage, StoreSchema } from './local-storage-wrapper';
 import { CurrentUserReplacementKey } from 'main/constants';
-import { Schema } from 'electron-store';
+import { AppSettings } from 'shared/app-settings';
 
-interface SearchPattern {
-  pattern: string;
-  extensions: string;
-}
-
-export interface AppSettingsStore {
-  searchPatterms: SearchPattern[];
-}
+export interface AppSettingsStore extends AppSettings {}
 
 export class SettingsStorage extends LocalStorage<AppSettingsStore> { }
 
@@ -18,7 +11,8 @@ const defaultSettings: AppSettingsStore = {
   searchPatterms: [
     { pattern: 'C:/ProgramData/Microsoft/Windows/Start Menu/**/', extensions: 'exe,lnk,msc' },
     { pattern: `C:/Users/${CurrentUserReplacementKey}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/**/`, extensions: 'exe,lnk,msc' }
-  ]
+  ],
+  launchHotkey: 'Super+Esc'
 };
 
 const appSettingsSchema: StoreSchema<AppSettingsStore> = {
@@ -33,6 +27,10 @@ const appSettingsSchema: StoreSchema<AppSettingsStore> = {
         extensions: { type: 'string' }
       }
     }
+  },
+  launchHotkey: {
+    type: 'string',
+    default: defaultSettings.launchHotkey
   }
 };
 
@@ -40,5 +38,9 @@ export const settingsStore: Options<AppSettingsStore> = ({
   name: '__tl-settings',
   accessPropertiesByDotNotation: false,
   schema: appSettingsSchema,
-  migrations: {}
+  migrations: {
+    '0.4.0': (store) => {
+      store.set('launchHotkey', 'Super+Esc');
+    }
+  }
 });

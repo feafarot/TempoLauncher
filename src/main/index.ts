@@ -4,6 +4,7 @@ import { isDev, mainWindowInteractions } from './main-utils';
 import unhandled from 'electron-unhandled';
 import { getMainWindow, initializeApp } from './app-initializer';
 import { info, error, catchErrors } from 'electron-log';
+import { appSettings } from './storage';
 
 if (!isDev()) {
   //unhandled();
@@ -38,7 +39,7 @@ app.on('ready', () => {
   info('Initializing main window...');
   const window = initializeApp();
   mainWindowInteractions.init(window);
-  globalShortcut.register('Super+Esc', () => {
+  globalShortcut.register(appSettings.get('launchHotkey'), () => {
     if (window) {
       if (!window.isVisible()) {
         window.show();
@@ -53,3 +54,7 @@ app.on('ready', () => {
 catchErrors({ showDialog: true });
 // process.on('uncaughtException', e => error(e));
 // process.on('unhandledRejection', e => error(e));
+
+if (module.hot) {
+  module.hot.accept();
+}

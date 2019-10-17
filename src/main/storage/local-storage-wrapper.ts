@@ -12,6 +12,10 @@ export class LocalStorage<T> {
     return this.store.get(key);
   }
 
+  getFullObj() {
+    return this.store.store;
+  }
+
   set<TKey extends keyof T>(key: TKey, value: T[TKey]) {
     return this.store.set(key, value);
   }

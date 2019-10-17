@@ -10,3 +10,7 @@ ReactDOM.render(<Root />, document.querySelector('#app'));
 //   error(err);
 // }
 catchErrors({});
+
+if (module.hot) {
+  module.hot.accept();
+}
