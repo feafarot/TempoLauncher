@@ -10,6 +10,7 @@ export interface DataOperatorFetchOptions {
 }
 
 export interface DataOperator {
+  rebuildIndex?: () => void;
   fetch(options?: DataOperatorFetchOptions): Promise<SearchableItem[]>;
   launch(value: string): Promise<boolean>;
 }

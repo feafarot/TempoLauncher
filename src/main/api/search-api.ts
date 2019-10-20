@@ -40,4 +40,8 @@ export function initSearchApi(ipcMain: IpcMain) {
       }))
     };
   });
+
+  createListener(ipcMain, actions.rebuildIndex, async rq => {
+    searchService.rebuildIndex();
+  });
 }

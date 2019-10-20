@@ -5,6 +5,10 @@ import { ControlPanelIndexerService, defaultControlPanelIndexer } from 'main/ser
 export class ControlPanelDataProvider implements DataOperator {
   constructor(private controlPanelIndexer: ControlPanelIndexerService) {}
 
+  reIndex() {
+    this.controlPanelIndexer.indexFiles();
+  }
+
   async fetch(options?: DataOperatorFetchOptions) {
     const controlPanelItems = await this.controlPanelIndexer.getCPItems(options && options.rebuildCache);
     return controlPanelItems.map<SearchableItem>((x, i) => {

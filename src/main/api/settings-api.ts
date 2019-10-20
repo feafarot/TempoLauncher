@@ -3,6 +3,7 @@ import { IpcMain } from 'electron';
 import { actions } from 'shared/contracts/actions';
 import { appSettings } from 'main/storage';
 import { AppSettings } from 'shared/app-settings';
+import { searchService } from 'main/services/search-service';
 
 export function initSettingsApi(ipcMain: IpcMain) {
   createListener(ipcMain, actions.getSettings, async _ => {
@@ -14,6 +15,7 @@ export function initSettingsApi(ipcMain: IpcMain) {
     Object.keys(rq.settings).forEach(x => {
       const key = <keyof AppSettings>x;
       appSettings.set(key, rq.settings[key]);
+      searchService.rebuildIndex();
     });
   });
 }

@@ -6,3 +6,11 @@ export const dataOperatorsRegistry: DataOperatorsRegistry = [
   { name: 'filesDataOperator', provider: filesDataProvider },
   { name: 'controlPanelDataProvider', provider: defaultControlPanelDataProvider }
 ];
+
+export function rebuildAllIndexes() {
+  dataOperatorsRegistry.forEach(x => {
+    if (x.provider.rebuildIndex) {
+      x.provider.rebuildIndex();
+    }
+  });
+}

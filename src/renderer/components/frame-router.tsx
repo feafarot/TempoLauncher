@@ -1,4 +1,4 @@
-import React, { memo, FC, createContext, useState, useContext } from 'react';
+import React, { memo, FC, createContext, useState, useContext, useCallback } from 'react';
 import { SearchFrame } from './search/search-frame';
 import { SettingsFrame } from './settings/settings-frame';
 
@@ -23,7 +23,8 @@ export function useRouter() {
 
 export const FrameRouter: FC = memo(() => {
   const [activeFrame, setFrame] = useState(Frame.search);
-  return <context.Provider value={{ activeFrame, switch: frame => setFrame(frame) }}>
+  const cbSetFrame = useCallback(setFrame, []);
+  return <context.Provider value={{ activeFrame, switch: cbSetFrame }}>
     {activeFrame === Frame.search &&
       <SearchFrame />}
     {activeFrame === Frame.settings &&

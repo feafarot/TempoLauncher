@@ -69,9 +69,12 @@ export const SearchFrame: React.FC = memo(() => {
   });
   const switchFrame = useRouter();
   const requestMinimize = useApiAction(actions.minimize, () => { });
+  const rebuildIndex = useApiAction(actions.rebuildIndex, () => { });
   useWindowsSizeFix(result.items.length);
   useApiListener(actions.appMinimizedByBlur, async () => {
-    resetData();
+    if (result.calc == null || result.calc == '') {
+      resetData();
+    }
   });
 
   function launchSelected() {
@@ -92,6 +95,7 @@ export const SearchFrame: React.FC = memo(() => {
         resetData();
         break;
       case 116: // F5
+        rebuildIndex();
         break;
       case 27: // Esc
         requestMinimize();

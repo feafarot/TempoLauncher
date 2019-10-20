@@ -11,5 +11,6 @@ export const actions = {
   minimize: Action.create<void, void>('minimize'),
   appMinimizedByBlur: Action.create<void, void>('appMinimizedByBlur'),
   getSettings: Action.create<void, GetSettingsResponse>('getSettings'),
-  saveSettings: Action.create<SaveSettingsRequest, void>('saveSettings')
+  saveSettings: Action.create<SaveSettingsRequest, void>('saveSettings'),
+  rebuildIndex: Action.create<void, void>('rebuildIndex'),
 };

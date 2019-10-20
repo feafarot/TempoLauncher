@@ -11,10 +11,9 @@ export const AppOpenHotkeyEdit: React.FC = React.memo(() => {
   return <Grid item container alignItems='center' spacing={3}>
     <Grid item xs={6}>
       <ShortcutInput keysSequence={model.launchHotkeySequence} textField={{ ...defaultTextFieldProps, label: 'App open hotkey' }}
-        onHotkeySelected={(seq) => {
+        onHotkeySelected={React.useCallback((seq) => {
           formik.setFieldValue('launchHotkeySequence', seq);
-          console.log(seq);
-        }} />
+        }, [])} />
     </Grid>
     <Grid item xs={6}>
       <FormControlLabel

@@ -1,9 +1,10 @@
 import { TextMatch } from 'shared/utils/util-types';
 import { escapeRegExp } from 'shared/utils';
 import { DataOperatorFetchOptions, SearchableItem, DataOperatorsRegistry } from 'main/data-operators/data-operator';
-import { dataOperatorsRegistry } from 'main/data-operators/providers-registry';
+import { dataOperatorsRegistry, rebuildAllIndexes } from 'main/data-operators/providers-registry';
 import { searchIdHelper } from './search-id-helper';
 import { ScoringService, scoringService as defaultScoringService } from './scoring-service';
+import { info } from 'electron-log';
 
 function optimizeMathces(matches: TextMatch[]) {
   return matches.reduce<TextMatch[]>(
@@ -45,10 +46,43 @@ function getUpperCaseNotationMatches(query: string, value: string) {
   return [];
 }
 
+function getAbbreviationNotationMatches(query: string, value: string) {
+  const queryChars = query.split('').map(x => `(^|\\s)${x}`);
+  const asUpperCaseMather = new RegExp(queryChars.join('.*'), 'gi');
+  if (asUpperCaseMather.test(value)) {
+    let processingValue = value;
+    let baseIndex = 0;
+    const highlightedParts = queryChars
+      .map(x => new RegExp(x, 'gi'))
+      .reduce<TextMatch[]>(
+        (s, crx) => {
+          const match = crx.exec(processingValue);
+          if (!match) {
+            return s;
+          }
+
+          const relativeIndex = match![0].length > 1 ? match!.index + 1: match!.index;
+          s.push([baseIndex + relativeIndex, baseIndex + relativeIndex]);
+          processingValue = processingValue.substr(relativeIndex + 1);
+          baseIndex += relativeIndex + 1;
+          return s;
+        },
+        []);
+    return optimizeMathces(highlightedParts);
+  }
+
+  return [];
+}
+
 function getFuzzyMatches(query: string, value: string) {
   const uppercaseMathces = getUpperCaseNotationMatches(query, value);
   if (uppercaseMathces.length > 0) {
     return uppercaseMathces;
+  }
+
+  const abbreviationMathces = getAbbreviationNotationMatches(query, value);
+  if (abbreviationMathces.length > 0) {
+    return abbreviationMathces;
   }
 
   const regex = new RegExp(escapeRegExp(query), 'gi');
@@ -73,6 +107,11 @@ export interface SearchOptions {
 
 export class SearchService {
   constructor(private providers: DataOperatorsRegistry, private scoringSvc: ScoringService) { }
+
+  rebuildIndex() {
+    info('Rebuilding indicies started.');
+    rebuildAllIndexes();
+  }
 
   async search(query: string, options?: SearchOptions) {
     const dataProviderOptions = (options && options.dataProviderOptions) || undefined;
