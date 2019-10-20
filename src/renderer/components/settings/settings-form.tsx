@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRouter, Frame } from '../frame-router';
-import { Formik, FormikHelpers } from 'formik';
-import { Button, Grid, FormControl, FormLabel, makeStyles, createStyles, Typography } from '@material-ui/core';
+import { Formik, FormikHelpers, useField } from 'formik';
+import { Button, Grid, FormControl, FormLabel, makeStyles, createStyles, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
 import { AppSettings } from 'shared/app-settings';
 import { useSettingsAutoResize } from './settings-hooks';
 import { SettingsModel, createModel, createSettingsFromModel } from './settings-model';
@@ -16,6 +16,18 @@ const useStyles = makeStyles((theme) => createStyles({
     marginRight: theme.spacing(2)
   }
 }));
+
+const StartupSettings: React.FC = React.memo(() => {
+  const [field, meta] = useField({ name: 'launchOnSystemStartup', type: 'checkbox' });
+  return <Grid item container xs={12}>
+    <Grid item xs={6}>
+      <FormControlLabel
+        label={`Launch on System startup`}
+        // onChange={() => formik.setFieldValue('hotkeyWithWinKey', !model.hotkeyWithWinKey)} />
+        control={<Checkbox {...field} />} />
+    </Grid>
+  </Grid>;
+});
 
 export const SettingsForm: React.FC<{ settings: AppSettings }> = React.memo(({ settings }) => {
   const classes = useStyles();
@@ -37,7 +49,11 @@ export const SettingsForm: React.FC<{ settings: AppSettings }> = React.memo(({ s
         <Grid container item xs={12} justify='flex-end'>
           <FormLabel><Typography variant='subtitle2'>TempoLauncher Settings</Typography></FormLabel>
         </Grid>
+        <Grid item xs={12} alignItems='center'>
+          <Typography variant='subtitle2'>General</Typography>
+        </Grid>
         <AppOpenHotkeyEdit />
+        <StartupSettings />
         <SearchFoldersEdit />
         <Grid container item xs={12} direction='row' justify='flex-end'>
           <Button variant='outlined' className={classes.cancelBtn} onClick={() => switchFrame(Frame.search)}>Cancel</Button>

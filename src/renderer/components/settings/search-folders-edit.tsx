@@ -15,9 +15,9 @@ function createDefaultPattern(): SettingsSearchPattern {
 
 export const SearchFoldersEdit: React.FC = React.memo(() => {
   const { values } = useFormikContext<SettingsModel>();
-  const patterns = values.searchPatterms;
+  const patterns = values.searchPatterns;
   return <FieldArray
-    name='searchPatterms'
+    name='searchPatterns'
     render={(helpers) => {
       return <>
         <Grid item xs={12} alignItems='center'>
@@ -27,13 +27,13 @@ export const SearchFoldersEdit: React.FC = React.memo(() => {
           <Grid key={i} item container xs={12} spacing={1} alignItems='center'>
             <Grid item xs={8}>
               <Field
-                name={`searchPatterms.[${i}].pattern`}
+                name={`searchPatterns.[${i}].pattern`}
                 render={({ field }: FieldProps<SettingsModel>) =>
                   <TextField {...defaultTextFieldProps} label='Folder Path' fullWidth {...field} />} />
             </Grid>
             <Grid item xs={3}>
               <Field
-                name={`searchPatterms.[${i}].extensions`}
+                name={`searchPatterns.[${i}].extensions`}
                 render={({ field }: FieldProps<SettingsModel>) =>
                   <TextField {...defaultTextFieldProps} label='Extensions' {...field} />} />
             </Grid>

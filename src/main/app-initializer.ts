@@ -1,11 +1,12 @@
 import { BrowserWindow, Tray, Menu, app } from 'electron';
 import { resolve, join } from 'path';
 import { format as formatUrl } from 'url';
-import { isDev } from './main-utils';
+import { isDev, getAppVersion } from './main-utils';
 import { uiConfig } from 'shared/ui-config';
 import { cache } from './storage';
 import { windows } from './windows';
 import { sendCloseNotification } from './api';
+import { applyRelevantSettings } from './settings-processing';
 
 const isDevelopment = isDev();
 const icon = resolve(__static, 'icon.png');
@@ -26,7 +27,7 @@ function initTray(refWindow: BrowserWindow) {
     refWindow.isVisible() ? hideWindow(refWindow) : refWindow.show();
   });
   const trayMenu = Menu.buildFromTemplate([
-    { label: `v.${app.getVersion()}`, type: 'normal', enabled: false },
+    { label: `v.${getAppVersion()}`, type: 'normal', enabled: false },
     { type: 'separator' },
     { label: 'Quit', type: 'normal', role: 'quit', click: () => app.quit() }
   ]);
@@ -73,7 +74,7 @@ function createMainWindowWithTray() {
   });
 
   window.on('closed', () => {
-    windows.main = null; // TODO: remove sideeffect
+    windows.main = null; // TODO: remove side-effect
   });
 
   window.webContents.on('devtools-opened', () => {
@@ -105,6 +106,7 @@ export function initializeApp() {
   const initRes = createMainWindowWithTray();
   windows.main = initRes.window;
   mainTray = initRes.tray;
+  applyRelevantSettings();
   return windows.main;
 }
 

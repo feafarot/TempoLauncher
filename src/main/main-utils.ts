@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, app, App } from 'electron';
+import packageJson from '../../package.json';
 
 export function getHash(data: string) {
   return createHash('md5').update(data).digest('hex');
@@ -18,3 +19,14 @@ export const mainWindowInteractions = {
     mainWindowRef.hide();
   }
 };
+
+interface AppHack extends App {
+  setAppPath(path: string): void;
+  setVersion(ver: string): void;
+}
+
+export function getAppVersion() {
+  return isDev()
+    ? packageJson.version
+    : app.getVersion();
+}

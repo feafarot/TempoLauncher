@@ -1,24 +1,25 @@
 import Store, { Options } from 'electron-store';
 import { LocalStorage, StoreSchema } from './local-storage-wrapper';
 import { CurrentUserReplacementKey } from 'main/constants';
-import { AppSettings } from 'shared/app-settings';
+import { AppSettings, SettingsSearchPattern } from 'shared/app-settings';
 
 export interface AppSettingsStore extends AppSettings {}
 
 export class SettingsStorage extends LocalStorage<AppSettingsStore> { }
 
 const defaultSettings: AppSettingsStore = {
-  searchPatterms: [
+  searchPatterns: [
     { pattern: 'C:/ProgramData/Microsoft/Windows/Start Menu/**/', extensions: 'exe,lnk,msc' },
     { pattern: `C:/Users/${CurrentUserReplacementKey}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/**/`, extensions: 'exe,lnk,msc' }
   ],
-  launchHotkey: 'Super+Esc'
+  launchHotkey: 'Super+Esc',
+  launchOnSystemStartup: true
 };
 
 const appSettingsSchema: StoreSchema<AppSettingsStore> = {
-  searchPatterms: {
+  searchPatterns: {
     type: 'array',
-    default: defaultSettings.searchPatterms,
+    default: defaultSettings.searchPatterns,
     items: {
       type: 'object',
       required: ['pattern', 'extensions'],
@@ -31,6 +32,10 @@ const appSettingsSchema: StoreSchema<AppSettingsStore> = {
   launchHotkey: {
     type: 'string',
     default: defaultSettings.launchHotkey
+  },
+  launchOnSystemStartup: {
+    type: 'boolean',
+    default: defaultSettings.launchOnSystemStartup
   }
 };
 
@@ -41,6 +46,17 @@ export const settingsStore: Options<AppSettingsStore> = ({
   migrations: {
     '0.4.0': (store) => {
       store.set('launchHotkey', 'Super+Esc');
+    },
+    '0.4.1': (store) => {
+      // tslint:disable-next-line: no-any
+      const prevPatterns = store.get('searchPatterms' as any) as SettingsSearchPattern[];
+      if (prevPatterns && prevPatterns.length > 0) {
+        store.set('searchPatterns', prevPatterns);
+      }
+
+      // tslint:disable-next-line: no-any
+      store.delete('searchPatterms' as any);
+      store.set('launchOnSystemStartup', true);
     }
   }
 });

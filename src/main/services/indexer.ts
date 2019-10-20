@@ -16,13 +16,13 @@ export class Indexer<T> {
   }
 
   async indexData() {
-    const [promise, resolveProgress, reject] = createControlledPromise<void>();
+    const [promise, resolveProgress,] = createControlledPromise<void>();
     this.indexingProgressPromise = promise;
-    const preparedCahce = await this.indexBuilder();
-    this.updateCache(preparedCahce);
+    const preparedCache = await this.indexBuilder();
+    this.updateCache(preparedCache);
     this.indexingProgressPromise = null;
     resolveProgress();
-    return preparedCahce;
+    return preparedCache;
   }
 
   async getData(forceReindex: boolean = false) {

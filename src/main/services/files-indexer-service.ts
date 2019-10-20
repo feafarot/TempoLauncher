@@ -37,7 +37,7 @@ export class FileIndexerService {
   private get patterns() {
     const userName = userInfo().username;
     return this.settingsStorage
-      .get('searchPatterms')
+      .get('searchPatterns')
       .map(x => `${x.pattern.replace(CurrentUserReplacementKey, userName)}*.{${x.extensions}}`);
   }
 

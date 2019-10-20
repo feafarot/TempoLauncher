@@ -8,12 +8,15 @@ import { defaultTextFieldProps } from './material-defaults';
 export const AppOpenHotkeyEdit: React.FC = React.memo(() => {
   const formik = useFormikContext<SettingsModel>();
   const model = formik.values;
+  const onSeqChange = React.useCallback(
+    (seq: string[]) => {
+      formik.setFieldValue('launchHotkeySequence', seq);
+    },
+    []);
   return <Grid item container alignItems='center' spacing={3}>
     <Grid item xs={6}>
       <ShortcutInput keysSequence={model.launchHotkeySequence} textField={{ ...defaultTextFieldProps, label: 'App open hotkey' }}
-        onHotkeySelected={React.useCallback((seq) => {
-          formik.setFieldValue('launchHotkeySequence', seq);
-        }, [])} />
+        onHotkeySelected={onSeqChange} />
     </Grid>
     <Grid item xs={6}>
       <FormControlLabel

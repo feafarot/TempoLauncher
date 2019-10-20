@@ -4,6 +4,7 @@ export interface SettingsSearchPattern {
 }
 
 export interface AppSettings {
-  searchPatterms: SettingsSearchPattern[];
+  searchPatterns: SettingsSearchPattern[];
   launchHotkey: string;
+  launchOnSystemStartup: boolean;
 }

@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/icon-extarctor-tool/IconExtarctor.csproj",
+                "${workspaceFolder}/src/icon-extractor-tool-fs/IconExtractor.fsproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/icon-extarctor-tool/IconExtarctor.csproj",
+                "${workspaceFolder}/src/icon-extractor-tool-fs/IconExtractor.fsproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/icon-extarctor-tool/IconExtarctor.csproj",
+                "${workspaceFolder}/src/icon-extarctor-tool-fs/IconExtarctor.fsproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

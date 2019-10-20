@@ -109,7 +109,7 @@ export class SearchService {
   constructor(private providers: DataOperatorsRegistry, private scoringSvc: ScoringService) { }
 
   rebuildIndex() {
-    info('Rebuilding indicies started.');
+    info('Rebuild index started.');
     rebuildAllIndexes();
   }
 

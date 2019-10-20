@@ -15,7 +15,9 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "sourceMap": true,
-    "paths": {},
+    "paths": {
+      "@root": ["../."]
+    },
     "plugins": [
       { "name": "typescript-tslint-plugin" }
     ]

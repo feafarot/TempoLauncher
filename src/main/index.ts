@@ -5,9 +5,9 @@ import unhandled from 'electron-unhandled';
 import { getMainWindow, initializeApp } from './app-initializer';
 import { info, error, catchErrors } from 'electron-log';
 import { appSettings } from './storage';
+import { join } from 'path';
 
 if (!isDev()) {
-  //unhandled();
 }
 else {
   app.commandLine.appendSwitch('remote-debugging-port', '9228');

@@ -8,17 +8,17 @@ const fileNotFoundIconResponse = '--FNF--';
 const MaxCmdArgsLength = 2300;
 
 function getArgumentBatches(paths: string[]) {
-  let curretLength = 0;
+  let currentLength = 0;
   let batches: string[][] = [[]];
   let currentBatchIndex = 0;
   for (let i in paths) {
-    if (paths[i].length + curretLength < MaxCmdArgsLength) {
-      curretLength += paths[i].length;
+    if (paths[i].length + currentLength < MaxCmdArgsLength) {
+      currentLength += paths[i].length;
       batches[currentBatchIndex].push(paths[i]);
     } else {
       batches.push([paths[i]]);
       currentBatchIndex++;
-      curretLength = paths[i].length;
+      currentLength = paths[i].length;
     }
   }
 
@@ -32,7 +32,7 @@ function getToolPaths() {
   }
 
   return {
-    cwd: toolPath + '',
+    cwd: toolPath,
     exe: 'IconExtractor.exe'
   };
 }
