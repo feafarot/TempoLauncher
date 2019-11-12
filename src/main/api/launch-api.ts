@@ -1,7 +1,7 @@
 import { createListener } from './utils';
 import { actions } from 'shared/contracts/actions';
 import { IpcMain } from 'electron';
-import { launcerService } from 'main/services/launcher-service';
+import { launcherService } from 'main/services/launcher-service';
 
 export function initLaunchApi(ipcMain: IpcMain) {
   createListener(ipcMain, actions.launch, async rq => {
@@ -10,7 +10,7 @@ export function initLaunchApi(ipcMain: IpcMain) {
     }
 
     try {
-      launcerService.launch(rq.targetId, rq.query);
+      launcherService.launch(rq.targetId, rq.queryObj);
     }
     catch (e) {
       return { success: false, error: e };

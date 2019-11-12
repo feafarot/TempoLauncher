@@ -3,7 +3,7 @@ import { InputBase } from '@material-ui/core';
 
 export enum QueryInputActionType {
   QueryChange,
-  SelectMode
+  ClearPlugin
 }
 
 export interface QueryInputActionInfo {
@@ -14,21 +14,24 @@ export interface QueryInputActionInfo {
 type QueryInputProps = {
   onChange: (actionInfo: QueryInputActionInfo) => void;
   query?: string;
+  className?: string;
 };
 
-export const QueryInput: React.FC<QueryInputProps> = memo(({ onChange, query }) => {
+export const QueryInput: React.FC<QueryInputProps> = memo(({ onChange, query, className }) => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
   };
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const inputQuery = (e.target as HTMLInputElement).value;
-      if (e.keyCode === 9) { // Tab
-        onChange({ type: QueryInputActionType.SelectMode, query: inputQuery });
+      if (e.keyCode === 8 && inputQuery == '') {
+        onChange({ type: QueryInputActionType.ClearPlugin, query: '' });
         e.preventDefault();
       }
 
-      if (e.keyCode === 38 || e.keyCode === 40) {
+      if (e.keyCode === 9 // Tab
+        || e.keyCode === 38 // Arrow Up
+        || e.keyCode === 40) { // Arrow Down
         e.preventDefault();
       }
     },
@@ -45,6 +48,7 @@ export const QueryInput: React.FC<QueryInputProps> = memo(({ onChange, query }) 
   };
 
   return <InputBase
+    className={className}
     inputProps={{ 'aria-label': 'naked' }}
     autoFocus
     onFocus={handleFocus}

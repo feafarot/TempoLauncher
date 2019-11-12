@@ -26,8 +26,9 @@ function initTray(refWindow: BrowserWindow) {
   tray.on('click', () => {
     refWindow.isVisible() ? hideWindow(refWindow) : refWindow.show();
   });
+  const devVerSuffix = isDev() ? '--dev' : '';
   const trayMenu = Menu.buildFromTemplate([
-    { label: `v.${getAppVersion()}`, type: 'normal', enabled: false },
+    { label: `v.${getAppVersion()}${devVerSuffix}`, type: 'normal', enabled: false },
     { type: 'separator' },
     { label: 'Quit', type: 'normal', role: 'quit', click: () => app.quit() }
   ]);

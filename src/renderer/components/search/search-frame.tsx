@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { makeStyles, Paper, Collapse, IconButton, createStyles } from '@material-ui/core';
+import React, { memo, useCallback } from 'react';
+import { makeStyles, Paper, IconButton, createStyles, Box } from '@material-ui/core';
 import { QueryInput } from './query-input';
 import { ResultsList } from '../results-list';
 import { uiConfig } from '../../../shared/ui-config';
@@ -11,13 +11,13 @@ import { useSelectionControl, useWindowsSizeFix, useQuerying } from './search-fr
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useRouter, Frame } from '../frame-router';
 import { grey } from '@material-ui/core/colors';
-
-const mainGlowSize = 4;
+import { DataItem } from 'shared/contracts/search';
+import { AppImage } from '../image';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
     overflow: 'hidden',
-    padding: mainGlowSize
+    padding: uiConfig.mainGlowSize
   },
   mainFrame: {
     position: 'fixed',
@@ -25,11 +25,12 @@ const useStyles = makeStyles(theme => createStyles({
     overflow: 'hidden',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: uiConfig.appWidth - mainGlowSize * 2,
-    minHeight: uiConfig.appIdleHeight - mainGlowSize * 2,
+    width: uiConfig.appWidth - uiConfig.mainGlowSize * 2,
+    minHeight: uiConfig.appIdleHeight - uiConfig.mainGlowSize * 2,
+    maxHeight: uiConfig.appIdleHeight - uiConfig.mainGlowSize * 2,
     zIndex: 100,
     '-webkit-app-region': 'drag',
-    boxShadow: `0px 0px ${mainGlowSize}px 0px ${theme.palette.primary.dark}`
+    boxShadow: `0px 0px ${uiConfig.mainGlowSize}px 0px ${theme.palette.primary.dark}`
   },
   settings: {
     position: 'absolute',
@@ -44,22 +45,40 @@ const useStyles = makeStyles(theme => createStyles({
   },
   query: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'baseline',
     height: '100%',
     '-webkit-app-region': 'no-drag',
     marginLeft: 20
   },
-  mathReslut: {
+  queryPlugin: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'baseline',
+    height: '100%',
+  },
+  queryInput: {
+    flexGrow: 1
+  },
+  pluginImg: {
+    verticalAlign: 'middle'
+  },
+  mathResult: {
     position: 'absolute',
     fontSize: '11px',
     bottom: 6
   }
 }));
 
+function getPluginKey(plugin: DataItem | null) {
+  return plugin ? plugin.value : undefined;
+}
+
 export const SearchFrame: React.FC = memo(() => {
   const classes = useStyles();
-  const { query, pluginKey, handleChange, result, resetData } = useQuerying();
+  const { query, activePluginInfo, handleChange, result, setActivePlugin, resetData } = useQuerying();
   const selection = useSelectionControl(result.items);
   const requestLaunch = useApiAction(actions.launch, (resp) => {
     if (resp.success) {
@@ -67,20 +86,43 @@ export const SearchFrame: React.FC = memo(() => {
       selection.reset();
     }
   });
+  const requestPluginLaunch = useApiAction(actions.launch, (resp) => {
+    selection.reset();
+  });
   const switchFrame = useRouter();
   const requestMinimize = useApiAction(actions.minimize, () => { });
   const rebuildIndex = useApiAction(actions.rebuildIndex, () => { });
+  const resetDataIfNotCalc = useCallback(
+    () => {
+      resetData(!!result.calc);
+    },
+    [result]);
+
   useWindowsSizeFix(result.items.length);
   useApiListener(actions.appMinimizedByBlur, async () => {
-    if (result.calc == null || result.calc == '') {
-      resetData();
-    }
+    resetDataIfNotCalc();
   });
 
-  function launchSelected() {
-    const targetId = result.items[selection.selectedIndex].id;
-    requestLaunch({ targetId, query, source: pluginKey || undefined });
-  }
+  const selectPlugin = useCallback(
+    () => {
+      const selectedItem = result.items[selection.selectedIndex];
+      setActivePlugin(selectedItem);
+      requestPluginLaunch({ targetId: selectedItem.id, queryObj: { query, pluginKey: getPluginKey(selectedItem) } });
+    },
+    [result, selection.selectedIndex]);
+
+  const launchSelected = useCallback(
+    () => {
+      const target = result.items[selection.selectedIndex];
+      if (target.isPluginSelector) {
+        selectPlugin();
+        return;
+      }
+
+      const targetId = target.id;
+      requestLaunch({ targetId, queryObj: { query, pluginKey: getPluginKey(activePluginInfo) } });
+    },
+    [result, activePluginInfo, selection.selectedIndex]);
 
   function onContainerKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.keyCode) {
@@ -92,14 +134,20 @@ export const SearchFrame: React.FC = memo(() => {
         break;
       case 13: // Enter
         launchSelected();
-        resetData();
+        //resetData();
         break;
       case 116: // F5
         rebuildIndex();
         break;
       case 27: // Esc
         requestMinimize();
-        resetData();
+        resetDataIfNotCalc();
+        break;
+      case 9: // Tab
+        if (!e.shiftKey) {
+          selectPlugin();
+        }
+
         break;
     }
   }
@@ -108,9 +156,15 @@ export const SearchFrame: React.FC = memo(() => {
     <div className={classes.root} onKeyDown={onContainerKeyDown}>
       <Paper className={classes.mainFrame}>
         <div className={classes.query}>
-          <QueryInput query={query} onChange={handleChange} />
+          {activePluginInfo != null &&
+            <div className={classes.queryPlugin}>
+              <Box pr={1}><AppImage src={activePluginInfo.icon} size={25} className={classes.pluginImg} /></Box>
+              <span>{activePluginInfo!.display}</span>
+              <span>&nbsp;{'>'}&nbsp;</span>
+            </div>}
+          <QueryInput query={query} onChange={handleChange} className={classes.queryInput} />
           {result.calc
-            && <span className={classes.mathReslut}> = {result.calc}</span>}
+            && <span className={classes.mathResult}> = {result.calc}</span>}
         </div>
         <IconButton className={classes.settings} size='small' onClick={() => switchFrame(Frame.settings)}>
           <SettingsIcon fontSize='inherit' />

@@ -1,9 +1,13 @@
 import { TextMatch } from 'shared/utils/util-types';
 
 export interface SearchRequest {
-  query: string;
-  prefix?: string;
+  queryObj: SearchQuery;
   rebuildCache?: boolean;
+}
+
+export interface SearchQuery {
+  query: string;
+  pluginKey?: string;
 }
 
 export interface DataItem {
@@ -13,6 +17,7 @@ export interface DataItem {
   value?: string;
   icon?: string;
   matches?: TextMatch[];
+  isPluginSelector?: boolean;
 }
 
 export interface SearchResponse {

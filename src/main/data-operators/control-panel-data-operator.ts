@@ -1,15 +1,23 @@
-import { DataOperator, DataOperatorFetchOptions, SearchableItem } from './data-operator';
+import { DataOperator, DataOperatorFetchOptions, SearchableItem, GlobalScope } from './data-operator';
 import { spawn } from 'child_process';
 import { ControlPanelIndexerService, defaultControlPanelIndexer } from 'main/services/control-panel/control-panel-indexer-service';
 
-export class ControlPanelDataProvider implements DataOperator {
+export class ControlPanelDataOperator implements DataOperator {
   constructor(private controlPanelIndexer: ControlPanelIndexerService) {}
+
+  get pluginKey() {
+    return 'controlPanelDataProvider';
+  }
+
+  get scope() {
+    return GlobalScope;
+  }
 
   reIndex() {
     this.controlPanelIndexer.indexFiles();
   }
 
-  async fetch(options?: DataOperatorFetchOptions) {
+  async fetch(currentQuery?: string, options?: DataOperatorFetchOptions) {
     const controlPanelItems = await this.controlPanelIndexer.getCPItems(options && options.rebuildCache);
     return controlPanelItems.map<SearchableItem>((x, i) => {
       return {
@@ -27,4 +35,4 @@ export class ControlPanelDataProvider implements DataOperator {
   }
 }
 
-export const defaultControlPanelDataProvider = new ControlPanelDataProvider(defaultControlPanelIndexer);
+export const defaultControlPanelDataOperator = new ControlPanelDataOperator(defaultControlPanelIndexer);

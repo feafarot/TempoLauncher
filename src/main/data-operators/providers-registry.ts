@@ -1,10 +1,12 @@
-import { DataOperatorsRegistry } from './data-operator';
-import { filesDataProvider } from './files-data-operator';
-import { defaultControlPanelDataProvider } from './control-panel-data-operator';
+import { DataOperatorsRegistry, createRegistryItem } from './data-operator';
+import { filesDataOperator } from './files-data-operator';
+import { defaultControlPanelDataOperator } from './control-panel-data-operator';
+import { defaultCmdDataOperator } from './cmd-data-operator';
 
 export const dataOperatorsRegistry: DataOperatorsRegistry = [
-  { name: 'filesDataOperator', provider: filesDataProvider },
-  { name: 'controlPanelDataProvider', provider: defaultControlPanelDataProvider }
+  createRegistryItem(filesDataOperator.pluginKey, filesDataOperator),
+  createRegistryItem(defaultControlPanelDataOperator.pluginKey, defaultControlPanelDataOperator),
+  createRegistryItem(defaultCmdDataOperator.pluginKey, defaultCmdDataOperator)
 ];
 
 export function rebuildAllIndexes() {

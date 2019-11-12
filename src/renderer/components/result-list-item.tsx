@@ -3,6 +3,7 @@ import { TextMatch } from 'shared/utils/util-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tooltip, ListItemText, ListItemIcon, ListItem } from '@material-ui/core';
 import { uiConfig } from 'shared/ui-config';
+import { AppImage, ImageFormat } from './image';
 
 const useStyles = makeStyles({
   root: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles({
     //backgroundColor: 'yellow',
     fontWeight: 'bold',
     textDecoration: 'underline'
+  },
+  icon: {
+    width: 32
   }
 });
 
@@ -71,7 +75,7 @@ export const ResultListItem: React.FC<ResultListItemProps> = memo(({ value, icon
   const markedValue = useMemo(() => markMatches(value, matches, classes.marked), [value, matches, classes.marked]);
   return <ListItem className={classes.root} selected={selected} ref={rootDiv} ContainerProps={{ onClick }} button>
     <ListItemIcon>
-      <img src={`data:image/png;base64,${icon}`} />
+      <AppImage src={icon} format={ImageFormat.Base64} />
     </ListItemIcon>
     <ListItemText
       primary={<span className={''}>{markedValue}</span>}

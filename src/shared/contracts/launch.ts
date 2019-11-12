@@ -1,6 +1,8 @@
+import { SearchQuery } from './search';
+
 export interface LaunchRequest {
   targetId: string;
-  query: string;
+  queryObj: SearchQuery;
   source?: string;
 }
 

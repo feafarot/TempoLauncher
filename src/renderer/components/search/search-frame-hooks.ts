@@ -26,7 +26,7 @@ export function useSelectionControl(items: DataItem[]) {
 }
 
 export function useWindowsSizeFix(resultsLength: number) {
-  const requestResize = useApiAction(actions.resize, () => {});
+  const requestResize = useApiAction(actions.resize, () => { });
 
   const resultsToRender = resultsLength > uiConfig.maxItemsShown ? uiConfig.maxItemsShown : resultsLength;
   const newHeight = resultsToRender * uiConfig.itemHeight + uiConfig.appIdleHeight;
@@ -43,35 +43,58 @@ export function useQuerying() {
   const defaultState: State = { items: [] };
 
   const [query, setQuery] = useState('');
-  const [pluginKey, setPluginKey] = useState<string | null>(null);
+  const [activePlugin, setActivePluginState] = useState<DataItem | null>(null);
   const [result, setResult] = useState<State>(defaultState);
   const runSearch = useApiAction(actions.search, resp => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
 
-  const debouncedRunSearch = useCallback(debounce(runSearch, 120), []);
-  const handleChange = (actionInfo: QueryInputActionInfo) => {
-    switch (actionInfo.type) {
-      case QueryInputActionType.QueryChange:
-        setQuery(actionInfo.query);
-        debouncedRunSearch({ query: actionInfo.query, prefix: pluginKey || '' });
-        break;
-      case QueryInputActionType.SelectMode:
-        setPluginKey(actionInfo.query);
+  const getPluginKey = useCallback(() => (activePlugin ? activePlugin.value : undefined), [activePlugin]);
+  const setActivePlugin = useCallback(
+    (plugin: DataItem | null) => {
+      if (plugin) {
+        setActivePluginState(plugin);
         setQuery('');
-        break;
-    }
-  };
+        debouncedRunSearch({ queryObj: { query: '', pluginKey: plugin.value } });
+      }
+      else if (activePlugin) {
+        setQuery(activePlugin.display);
+        setActivePluginState(null);
+        debouncedRunSearch({ queryObj: { query: activePlugin.display } });
+      }
+    },
+    [activePlugin]);
+
+  const debouncedRunSearch = useCallback(debounce(runSearch, 120), []);
+  const handleChange = useCallback(
+    (actionInfo: QueryInputActionInfo) => {
+      switch (actionInfo.type) {
+        case QueryInputActionType.QueryChange:
+          setQuery(actionInfo.query);
+          debouncedRunSearch({ queryObj: { query: actionInfo.query, pluginKey: getPluginKey() } });
+          break;
+        case QueryInputActionType.ClearPlugin:
+          if (activePlugin) {
+            setActivePlugin(null);
+          }
+
+          break;
+      }
+    },
+    [activePlugin]);
 
   return {
     query,
-    pluginKey,
+    activePluginInfo: activePlugin,
     handleChange,
     result,
-    resetData: () => {
-      setPluginKey(null);
-      setResult(defaultState);
-      setQuery('');
+    setActivePlugin,
+    resetData: (persistCalcResult: boolean = false) => {
+      setActivePlugin(null);
+      if (!persistCalcResult) {
+        setResult(defaultState);
+        setQuery('');
+      }
     }
   };
 }

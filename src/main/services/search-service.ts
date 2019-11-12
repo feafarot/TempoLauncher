@@ -5,8 +5,11 @@ import { dataOperatorsRegistry, rebuildAllIndexes } from 'main/data-operators/pr
 import { searchIdHelper } from './search-id-helper';
 import { ScoringService, scoringService as defaultScoringService } from './scoring-service';
 import { info } from 'electron-log';
+import { AppCacheStorage } from 'main/storage/cache';
+import { cache } from 'main/storage';
+import { SearchQuery } from 'shared/contracts/search';
 
-function optimizeMathces(matches: TextMatch[]) {
+function optimizeMatches(matches: TextMatch[]) {
   return matches.reduce<TextMatch[]>(
     (s, [cStart, cEnd]) => {
       if (s.length > 0) {
@@ -40,7 +43,7 @@ function getUpperCaseNotationMatches(query: string, value: string) {
           return s;
         },
         []);
-    return optimizeMathces(highlightedParts);
+    return optimizeMatches(highlightedParts);
   }
 
   return [];
@@ -68,21 +71,21 @@ function getAbbreviationNotationMatches(query: string, value: string) {
           return s;
         },
         []);
-    return optimizeMathces(highlightedParts);
+    return optimizeMatches(highlightedParts);
   }
 
   return [];
 }
 
 function getFuzzyMatches(query: string, value: string) {
-  const uppercaseMathces = getUpperCaseNotationMatches(query, value);
-  if (uppercaseMathces.length > 0) {
-    return uppercaseMathces;
+  const uppercaseMatches = getUpperCaseNotationMatches(query, value);
+  if (uppercaseMatches.length > 0) {
+    return uppercaseMatches;
   }
 
-  const abbreviationMathces = getAbbreviationNotationMatches(query, value);
-  if (abbreviationMathces.length > 0) {
-    return abbreviationMathces;
+  const abbreviationMatches = getAbbreviationNotationMatches(query, value);
+  if (abbreviationMatches.length > 0) {
+    return abbreviationMatches;
   }
 
   const regex = new RegExp(escapeRegExp(query), 'gi');
@@ -98,6 +101,7 @@ function getFuzzyMatches(query: string, value: string) {
 
 export interface SearchMatch extends SearchableItem {
   id: string;
+  isPluginSelector?: boolean;
   matches: TextMatch[];
 }
 
@@ -106,30 +110,65 @@ export interface SearchOptions {
 }
 
 export class SearchService {
-  constructor(private providers: DataOperatorsRegistry, private scoringSvc: ScoringService) { }
+  constructor(private providers: DataOperatorsRegistry, private scoringSvc: ScoringService, private appCache: AppCacheStorage) { }
+
+  private get globalProviders() {
+    return this.providers.filter(x => x.isGlobal);
+  }
+
+  private get providedSearchableItems() {
+    return this.providers
+      .filter(x => x.provider.defaultItem != null)
+      .map(x => ({ provider: x.name, data: [x.provider.defaultItem!], isPluginSelector: true }));
+  }
 
   rebuildIndex() {
     info('Rebuild index started.');
+    this.appCache.set('files', []);
     rebuildAllIndexes();
   }
 
-  async search(query: string, options?: SearchOptions) {
-    const dataProviderOptions = (options && options.dataProviderOptions) || undefined;
-    const resultsCollection = await Promise.all(this.providers.map(x => x.provider.fetch(dataProviderOptions).then(r => ({ provider: x.name, data: r }))));
-    const searchResults = resultsCollection
+  private async getGlobalSearchMatches(query: string, options?: DataOperatorFetchOptions) {
+    const resultsCollection = await Promise.all(
+      this.globalProviders.map(x => x.provider.fetch(query, options)
+        .then(r => ({ provider: x.name, data: r, isPluginSelector: false }))));
+    const searchResults =resultsCollection.concat(this.providedSearchableItems)
       .flatMap(x => {
         return x.data.map<SearchMatch>(item => {
           const matches = getFuzzyMatches(query, item.displayText);
           return {
             ...item,
             id: searchIdHelper.buildId(x.provider, item.value),
-            matches: matches
+            matches: matches,
+            isPluginSelector: x.isPluginSelector
           };
         });
       })
       .filter(x => x.matches.length > 0);
-    return this.scoringSvc.sortResults(searchResults, query);
+    return searchResults;
+  }
+
+  private async getPluginSearchMatches(query: string, pluginKey: string, options?: DataOperatorFetchOptions) {
+    const plugin = this.providers.find(x => !x.isGlobal && x.name === pluginKey)!;
+    const pluginResults = await plugin.provider.fetch(query, options);
+    return pluginResults.map<SearchMatch>(x => ({
+      ...x,
+      id: searchIdHelper.buildId(plugin.name, x.value),
+      matches: [],
+    }));
+  }
+
+  async search(queryObj: SearchQuery, options?: SearchOptions) {
+    if (queryObj.query == '') {
+      return [];
+    }
+
+    const dataProviderOptions = (options && options.dataProviderOptions) || undefined;
+    const searchResults = queryObj.pluginKey
+      ? await this.getPluginSearchMatches(queryObj.query, queryObj.pluginKey, dataProviderOptions)
+      : await this.getGlobalSearchMatches(queryObj.query, dataProviderOptions);
+    return this.scoringSvc.sortResults(searchResults, queryObj.query);
   }
 }
 
-export const searchService = new SearchService(dataOperatorsRegistry, defaultScoringService);
+export const searchService = new SearchService(dataOperatorsRegistry, defaultScoringService, cache);

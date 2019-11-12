@@ -41,6 +41,10 @@ export class ScoringService {
   }
 
   private getBaseScore(searchMatch: SearchMatch, query: string) {
+    if (searchMatch.matches.length === 0) {
+      return 0;
+    }
+
     const [fm,] = searchMatch.matches;
     let score = searchMatch.matches.reduce((s, c) => s + c[1] - c[0] + 1, 0); // Total lengths of matches
     if (fm[1] - fm[0] === query.length - 1) { // Full match

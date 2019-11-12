@@ -10,7 +10,7 @@ type ResultsListProps = {
 const maxHeight = uiConfig.itemHeight * uiConfig.maxItemsShown;
 const useStyles = makeStyles({
   menuPaper: {
-    marginTop: uiConfig.appIdleHeight,
+    marginTop: uiConfig.appIdleHeight - uiConfig.mainGlowSize * 2,
     maxHeight: maxHeight,
     overflowY: 'scroll',
     overflowX: 'hidden',
