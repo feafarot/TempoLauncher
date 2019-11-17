@@ -27,31 +27,35 @@ import { NullId, createRequestPacket as createRequestPacket, createResponsePacke
 
 export function useApiAction<TRq, TRp>(action: Action<TRq, TRp>, handler: (response: TRp) => void) {
   const cref = useRef({ currentId: NullId });
-  const responseHandler = (e: IpcRendererEvent, contractResponse: DataPacket<TRp>) => {
-    if (cref.current.currentId === contractResponse.id) {
-      handler(contractResponse.data);
-      cref.current.currentId = NullId;
-    }
-  };
+  const responseHandler = useCallback(
+    (e: IpcRendererEvent, contractResponse: DataPacket<TRp>) => {
+      if (cref.current.currentId === contractResponse.id) {
+        handler(contractResponse.data);
+        cref.current.currentId = NullId;
+      }
+    },
+    [cref.current, handler]);
 
-  return (request: TRq) => {
-    const packet = createRequestPacket(action, request);
-    cref.current.currentId = packet.id;
-    ipcRenderer.once(packet.reponseId, responseHandler);
-    ipcRenderer.send(action.requestId, packet);
-  };
+  return useCallback(
+    (request: TRq) => {
+      const packet = createRequestPacket(action, request);
+      cref.current.currentId = packet.id;
+      ipcRenderer.once(packet.reponseId, responseHandler);
+      ipcRenderer.send(action.requestId, packet);
+    },
+    [action, cref.current, responseHandler]);
 }
 
 export function useApiListener<TRq, TRp>(action: Action<TRq, TRp>, listener: (request: TRq) => Promise<TRp>) {
   useEffect(() => {
-    async function requestHandler(e: IpcRendererEvent, args: RequestDataPacket<TRq>) {
-      const res = await listener(args.data);
-      e.sender.send(args.reponseId, createResponsePacket(args.id, res));
-    }
+    const requestHandler = async (e: IpcRendererEvent, args: RequestDataPacket<TRq>) => {
+        const res = await listener(args.data);
+        e.sender.send(args.reponseId, createResponsePacket(args.id, res));
+      };
 
     ipcRenderer.on(action.requestId, requestHandler);
     return () => {
-      ipcRenderer.removeListener(action.requestId, requestHandler);
-    };
+        ipcRenderer.removeListener(action.requestId, requestHandler);
+      };
   });
 }

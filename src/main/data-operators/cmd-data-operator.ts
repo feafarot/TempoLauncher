@@ -4,6 +4,10 @@ import { getStaticImageAsBase64 } from 'main/main-utils';
 
 const defaultIcon = getStaticImageAsBase64('cmd-96.png');
 
+function createStartCmd(execTarget?: string, shell: string = 'cmd /K') {
+  return `start ${shell} ${execTarget || ''}`;
+}
+
 export class CmdDataOperator implements DataOperator {
   constructor() {}
 
@@ -28,13 +32,13 @@ export class CmdDataOperator implements DataOperator {
     return [
       {
         displayText: 'CMD',
-        value: currentQuery || '',
+        value: createStartCmd(currentQuery),
         icon: defaultIcon,
         secondaryText: `cmd> "${currentQuery}"`
       },
       {
         displayText: 'PowerShell',
-        value: `powershell -Command "${currentQuery}"`,
+        value: createStartCmd(`"${currentQuery}"`, 'PowerShell -Command'),
         icon: defaultIcon,
         secondaryText: `PS> "${currentQuery}"`
       },

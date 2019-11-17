@@ -13,6 +13,7 @@ import { useRouter, Frame } from '../frame-router';
 import { grey } from '@material-ui/core/colors';
 import { DataItem } from 'shared/contracts/search';
 import { AppImage } from '../image';
+import { KeyCodes } from 'renderer/key-codes';
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -106,8 +107,10 @@ export const SearchFrame: React.FC = memo(() => {
   const selectPlugin = useCallback(
     () => {
       const selectedItem = result.items[selection.selectedIndex];
-      setActivePlugin(selectedItem);
-      requestPluginLaunch({ targetId: selectedItem.id, queryObj: { query, pluginKey: getPluginKey(selectedItem) } });
+      if (selectedItem.isPluginSelector) {
+        setActivePlugin(selectedItem);
+        requestPluginLaunch({ targetId: selectedItem.id, queryObj: { query, pluginKey: getPluginKey(selectedItem) } });
+      }
     },
     [result, selection.selectedIndex]);
 
@@ -126,24 +129,23 @@ export const SearchFrame: React.FC = memo(() => {
 
   function onContainerKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.keyCode) {
-      case 38: // ArrowUp
+      case KeyCodes.ArrowUp:
         selection.handleUp();
         break;
-      case 40: // ArrowDown
+      case KeyCodes.ArrowUp:
         selection.handleDown();
         break;
-      case 13: // Enter
+      case KeyCodes.Enter:
         launchSelected();
-        //resetData();
         break;
-      case 116: // F5
+      case KeyCodes.F5:
         rebuildIndex();
         break;
-      case 27: // Esc
+      case KeyCodes.Esc:
         requestMinimize();
         resetDataIfNotCalc();
         break;
-      case 9: // Tab
+      case KeyCodes.Tab:
         if (!e.shiftKey) {
           selectPlugin();
         }

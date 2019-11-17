@@ -1,5 +1,6 @@
 import React, { useState, memo, useCallback } from 'react';
 import { InputBase } from '@material-ui/core';
+import { KeyCodes } from 'renderer/key-codes';
 
 export enum QueryInputActionType {
   QueryChange,
@@ -24,14 +25,14 @@ export const QueryInput: React.FC<QueryInputProps> = memo(({ onChange, query, cl
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const inputQuery = (e.target as HTMLInputElement).value;
-      if (e.keyCode === 8 && inputQuery == '') {
+      if (e.keyCode === KeyCodes.Backspace && inputQuery == '') {
         onChange({ type: QueryInputActionType.ClearPlugin, query: '' });
         e.preventDefault();
       }
 
-      if (e.keyCode === 9 // Tab
-        || e.keyCode === 38 // Arrow Up
-        || e.keyCode === 40) { // Arrow Down
+      if (e.keyCode === KeyCodes.Tab
+        || e.keyCode === KeyCodes.ArrowUp
+        || e.keyCode === KeyCodes.ArrowDown) {
         e.preventDefault();
       }
     },

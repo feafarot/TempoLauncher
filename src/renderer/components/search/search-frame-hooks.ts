@@ -10,18 +10,22 @@ export function useSelectionControl(items: DataItem[]) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const maxIndex = items.length - 1;
   return {
-    handleUp: () => {
-      if (items.length > 0) {
-        setSelectedIndex(s => (s === 0 ? maxIndex : s - 1));
-      }
-    },
-    handleDown: () => {
-      if (items.length > 0) {
-        setSelectedIndex(s => (s < maxIndex ? s + 1 : 0));
-      }
-    },
     selectedIndex,
-    reset: () => setSelectedIndex(0)
+    handleUp: useCallback(
+      () => {
+        if (items.length > 0) {
+          setSelectedIndex(s => (s === 0 ? maxIndex : s - 1));
+        }
+      },
+      [items, maxIndex]),
+    handleDown: useCallback(
+      () => {
+        if (items.length > 0) {
+          setSelectedIndex(s => (s < maxIndex ? s + 1 : 0));
+        }
+      },
+      [items, maxIndex]),
+    reset: useCallback(() => setSelectedIndex(0), [])
   };
 }
 
@@ -83,18 +87,22 @@ export function useQuerying() {
     },
     [activePlugin]);
 
+  const resetData = useCallback(
+    (persistCalcResult: boolean = false) => {
+      setActivePlugin(null);
+      if (!persistCalcResult) {
+        setResult(defaultState);
+        setQuery('');
+      }
+    },
+    []);
+
   return {
     query,
     activePluginInfo: activePlugin,
     handleChange,
     result,
     setActivePlugin,
-    resetData: (persistCalcResult: boolean = false) => {
-      setActivePlugin(null);
-      if (!persistCalcResult) {
-        setResult(defaultState);
-        setQuery('');
-      }
-    }
+    resetData
   };
 }
