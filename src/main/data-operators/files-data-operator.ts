@@ -13,8 +13,8 @@ export class FilesDataOperator implements DataOperator {
     return GlobalScope;
   }
 
-  reIndex() {
-    this.filesIndexer.indexFiles();
+  async rebuildIndex() {
+    await this.filesIndexer.indexFiles();
   }
 
   async fetch(currentQuery?: string, options?: DataOperatorFetchOptions) {

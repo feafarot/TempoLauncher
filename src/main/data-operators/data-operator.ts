@@ -15,22 +15,22 @@ export interface DataOperator {
   readonly scope: string | Symbol;
   readonly pluginKey: string;
   readonly defaultItem?: SearchableItem;
-  rebuildIndex?: () => void;
+  rebuildIndex?: () => Promise<void>;
   fetch(currentQuery?: string, options?: DataOperatorFetchOptions): Promise<SearchableItem[]>;
   launch(value: string, query?: string): Promise<boolean>;
 }
 
 export interface DataOperatorRegistryItem {
-  provider: DataOperator;
+  operator: DataOperator;
   name: string;
   isGlobal: boolean;
 }
 
-export function createRegistryItem(name: string, provider: DataOperator) {
+export function createRegistryItem(name: string, operator: DataOperator) {
   return {
     name,
-    provider,
-    isGlobal: provider.scope === GlobalScope
+    operator,
+    isGlobal: operator.scope === GlobalScope
   };
 }
 

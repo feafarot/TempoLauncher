@@ -13,8 +13,8 @@ export class ControlPanelDataOperator implements DataOperator {
     return GlobalScope;
   }
 
-  reIndex() {
-    this.controlPanelIndexer.indexFiles();
+  async rebuildIndex() {
+    await this.controlPanelIndexer.indexFiles();
   }
 
   async fetch(currentQuery?: string, options?: DataOperatorFetchOptions) {

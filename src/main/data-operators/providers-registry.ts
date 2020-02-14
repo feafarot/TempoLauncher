@@ -9,10 +9,9 @@ export const dataOperatorsRegistry: DataOperatorsRegistry = [
   createRegistryItem(defaultCmdDataOperator.pluginKey, defaultCmdDataOperator)
 ];
 
-export function rebuildAllIndexes() {
-  dataOperatorsRegistry.forEach(x => {
-    if (x.provider.rebuildIndex) {
-      x.provider.rebuildIndex();
-    }
+export async function rebuildAllIndexes() {
+  const all = dataOperatorsRegistry.filter(x => x.operator.rebuildIndex).map(x => {
+    return x.operator.rebuildIndex!();
   });
+  await Promise.all(all);
 }

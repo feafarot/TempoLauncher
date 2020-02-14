@@ -20,7 +20,7 @@ export const SearchFoldersEdit: React.FC = React.memo(() => {
     name='searchPatterns'
     render={(helpers) => {
       return <>
-        <Grid item xs={12} alignItems='center'>
+        <Grid item xs={12} container alignItems='center'>
           <Typography variant='subtitle2'>Installed application search patterns</Typography>
         </Grid>
         {patterns.map((sp, i) =>

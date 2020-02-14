@@ -116,7 +116,7 @@
       "autoAttachChildProcesses": true,
       //"internalConsoleOptions": "openOnFirstSessionStart",
       "console": "integratedTerminal",
-      "timeout": 50000
+      "timeout": 100000
     },
     {
       "name": "Electron: Renderer [Attach]",

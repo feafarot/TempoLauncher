@@ -3,9 +3,8 @@ import { initializeApi } from './api';
 import { isDev, mainWindowInteractions } from './main-utils';
 import unhandled from 'electron-unhandled';
 import { getMainWindow, initializeApp } from './app-initializer';
-import { info, error, catchErrors } from 'electron-log';
+import { info, catchErrors } from 'electron-log';
 import { appSettings } from './storage';
-import { join } from 'path';
 
 if (!isDev()) {
 }
@@ -52,8 +51,9 @@ app.on('ready', () => {
 });
 
 catchErrors({ showDialog: true });
-// process.on('uncaughtException', e => error(e));
-// process.on('unhandledRejection', e => error(e));
+if (isDev()) {
+  unhandled();
+}
 
 if (module.hot) {
   module.hot.accept();

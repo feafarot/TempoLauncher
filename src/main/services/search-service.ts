@@ -118,19 +118,20 @@ export class SearchService {
 
   private get providedSearchableItems() {
     return this.providers
-      .filter(x => x.provider.defaultItem != null)
-      .map(x => ({ provider: x.name, data: [x.provider.defaultItem!], isPluginSelector: true }));
+      .filter(x => x.operator.defaultItem != null)
+      .map(x => ({ provider: x.name, data: [x.operator.defaultItem!], isPluginSelector: true }));
   }
 
-  rebuildIndex() {
+  async rebuildIndex() {
     info('Rebuild index started.');
     this.appCache.set('files', []);
-    rebuildAllIndexes();
+    await rebuildAllIndexes();
+    info('Rebuild index finished.');
   }
 
   private async getGlobalSearchMatches(query: string, options?: DataOperatorFetchOptions) {
     const resultsCollection = await Promise.all(
-      this.globalProviders.map(x => x.provider.fetch(query, options)
+      this.globalProviders.map(x => x.operator.fetch(query, options)
         .then(r => ({ provider: x.name, data: r, isPluginSelector: false }))));
     const searchResults =resultsCollection.concat(this.providedSearchableItems)
       .flatMap(x => {
@@ -150,7 +151,7 @@ export class SearchService {
 
   private async getPluginSearchMatches(query: string, pluginKey: string, options?: DataOperatorFetchOptions) {
     const plugin = this.providers.find(x => !x.isGlobal && x.name === pluginKey)!;
-    const pluginResults = await plugin.provider.fetch(query, options);
+    const pluginResults = await plugin.operator.fetch(query, options);
     return pluginResults.map<SearchMatch>(x => ({
       ...x,
       id: searchIdHelper.buildId(plugin.name, x.value),

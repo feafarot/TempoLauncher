@@ -71,6 +71,7 @@ let getFullPath (target: string) =
     target
     |> resolveEnvVariablesInPath
     |> execIfLink resolveShortcut // Path from .lnk files might contain path with variables as well
+    |> Option.bind (fun path -> if Path.HasExtension(path) then Some path else None)
     |> Option.map resolveEnvVariablesInPath
 
 let getIcon (target: string) =
@@ -99,10 +100,12 @@ let getIconAsBase64 target =
         ptr |> Option.map (fun x -> DestroyIcon(x)) |> ignore
 
         ms.ToArray() |> Convert.ToBase64String
-
-    (getFullPath target)
-    |> Option.bind getIcon
-    |> Option.map convertToBase64
+    try
+      (getFullPath target)
+      |> Option.bind getIcon
+      |> Option.map convertToBase64
+    with
+      | :? FileNotFoundException -> None
 
 let getShortcutTarget path =
     File.Exists(path)

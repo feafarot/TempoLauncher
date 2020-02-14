@@ -14,7 +14,7 @@ export class LauncherService {
       throw new Error(`Unknown provider ${parsedId.provider}`);
     }
 
-    const result = await operator.provider.launch(parsedId.value, queryObj.query);
+    const result = await operator.operator.launch(parsedId.value, queryObj.query);
     this.scoringSvc.logLaunch(id, queryObj.query);
     if (result) {
       mainWindowInteractions.hide();

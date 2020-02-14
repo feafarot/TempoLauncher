@@ -132,7 +132,7 @@ export const SearchFrame: React.FC = memo(() => {
       case KeyCodes.ArrowUp:
         selection.handleUp();
         break;
-      case KeyCodes.ArrowUp:
+      case KeyCodes.ArrowDown:
         selection.handleDown();
         break;
       case KeyCodes.Enter:
