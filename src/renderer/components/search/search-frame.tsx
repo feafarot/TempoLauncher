@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { makeStyles, Paper, IconButton, createStyles, Box } from '@material-ui/core';
-import { QueryInput } from './query-input';
+import { QueryInput, QueryInputActionInfo } from './query-input';
 import { ResultsList } from '../results-list';
 import { uiConfig } from '../../../shared/ui-config';
 import { Configurator } from '../configurator';
@@ -81,6 +81,12 @@ export const SearchFrame: React.FC = memo(() => {
   const classes = useStyles();
   const { query, activePluginInfo, handleChange, result, setActivePlugin, resetData } = useQuerying();
   const selection = useSelectionControl(result.items);
+  const handleChangeWrapped = useCallback(
+    (actionInfo: QueryInputActionInfo) => {
+      selection.reset();
+      handleChange(actionInfo);
+    },
+    []);
   const requestLaunch = useApiAction(actions.launch, (resp) => {
     if (resp.success) {
       resetData();
@@ -164,7 +170,7 @@ export const SearchFrame: React.FC = memo(() => {
               <span>{activePluginInfo!.display}</span>
               <span>&nbsp;{'>'}&nbsp;</span>
             </div>}
-          <QueryInput query={query} onChange={handleChange} className={classes.queryInput} />
+          <QueryInput query={query} onChange={handleChangeWrapped} className={classes.queryInput} />
           {result.calc
             && <span className={classes.mathResult}> = {result.calc}</span>}
         </div>

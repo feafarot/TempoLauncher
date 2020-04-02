@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldArray, useFormikContext, Field, FieldProps } from 'formik';
+import { FieldArray, useFormikContext, Field, FieldProps, FastField } from 'formik';
 import { SettingsModel } from './settings-model';
 import { Grid, TextField, IconButton, Box, GridList, Typography, Button } from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
@@ -26,16 +26,18 @@ export const SearchFoldersEdit: React.FC = React.memo(() => {
         {patterns.map((sp, i) =>
           <Grid key={i} item container xs={12} spacing={1} alignItems='center'>
             <Grid item xs={8}>
-              <Field
-                name={`searchPatterns.[${i}].pattern`}
-                render={({ field }: FieldProps<SettingsModel>) =>
-                  <TextField {...defaultTextFieldProps} label='Folder Path' fullWidth {...field} />} />
+              <FastField
+                name={`searchPatterns[${i}].pattern`}>
+                {({ field }: FieldProps<SettingsModel>) =>
+                  <TextField {...defaultTextFieldProps} label='Folder Path' fullWidth {...field} />}
+              </FastField>
             </Grid>
             <Grid item xs={3}>
-              <Field
-                name={`searchPatterns.[${i}].extensions`}
-                render={({ field }: FieldProps<SettingsModel>) =>
-                  <TextField {...defaultTextFieldProps} label='Extensions' {...field} />} />
+              <FastField
+                name={`searchPatterns[${i}].extensions`}>
+                {({ field }: FieldProps<SettingsModel>) =>
+                  <TextField {...defaultTextFieldProps} label='Extensions' {...field} />}
+              </FastField>
             </Grid>
             <Grid item xs={1}>
               <IconButton onClick={helpers.handleRemove(i)} color='secondary'>

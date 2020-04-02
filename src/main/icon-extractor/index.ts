@@ -28,7 +28,7 @@ function getArgumentBatches(paths: string[]) {
 function getToolPaths() {
   let toolPath = path.resolve(process.resourcesPath!, 'tools/icon-extractor');
   if (isDev()) {
-    toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extractor-tool-fs/bin/Release/netcoreapp3.0/win-x64/publish');
+    toolPath = path.resolve(app.getAppPath(), '../../', 'src/icon-extractor-tool-fs/bin/Release/netcoreapp3.1/win-x64/publish');
   }
 
   return {

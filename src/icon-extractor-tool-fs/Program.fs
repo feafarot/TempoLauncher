@@ -4,6 +4,7 @@ open System.Drawing
 open Api
 open System.Text.RegularExpressions
 open ShellLink
+open FSharp.Collections.ParallelSeq
 
 type OrElseBuilder() =
     member this.ReturnFrom(x) = x
@@ -101,11 +102,11 @@ let getIconAsBase64 target =
 
         ms.ToArray() |> Convert.ToBase64String
     try
-      (getFullPath target)
-      |> Option.bind getIcon
-      |> Option.map convertToBase64
+        (getFullPath target)
+        |> Option.bind getIcon
+        |> Option.map convertToBase64
     with
-      | :? FileNotFoundException -> None
+        | :? FileNotFoundException -> None
 
 let getShortcutTarget path =
     File.Exists(path)
@@ -116,9 +117,11 @@ let main argv =
     Console.OutputEncoding = Text.UTF8Encoding.UTF8 |> ignore;
 
     argv
-    |> Array.map (getIconAsBase64
-                  >> (function
-                      | None -> printfn "--FNF--"
-                      | Some icon -> printfn "%s" icon))
+    |> PSeq.ordered
+    |> PSeq.map getIconAsBase64
+    |> PSeq.toArray
+    |> Array.map (function
+        | None -> printfn "--FNF--"
+        | Some icon -> printfn "%s" icon)
     |> ignore
     0 // return an integer exit code

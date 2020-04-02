@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DataItem } from 'shared/contracts/search';
+import { DataItem, SearchRequest } from 'shared/contracts/search';
 import { useApiAction } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
 import { uiConfig } from 'shared/ui-config';
@@ -49,9 +49,15 @@ export function useQuerying() {
   const [query, setQuery] = useState('');
   const [activePlugin, setActivePluginState] = useState<DataItem | null>(null);
   const [result, setResult] = useState<State>(defaultState);
-  const runSearch = useApiAction(actions.search, resp => {
+  const runApiSearch = useApiAction(actions.search, resp => {
     setResult({ items: resp.items, calc: resp.mathEvalResult });
   });
+  const runSearch = useCallback(
+    (request: SearchRequest) => {
+      setResult({ items: [], calc: result.calc });
+      runApiSearch(request);
+    },
+    []);
 
   const getPluginKey = useCallback(() => (activePlugin ? activePlugin.value : undefined), [activePlugin]);
   const setActivePlugin = useCallback(

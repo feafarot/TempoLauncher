@@ -97,3 +97,6 @@ typings/
 # C# related
 bin/
 obj/
+
+.fake
+.ionide
