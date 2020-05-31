@@ -21,13 +21,15 @@ export function useRouter() {
   return ctx.switch;
 }
 
+let tid = 0;
 export const FrameRouter: FC = memo(() => {
   const [activeFrame, setFrame] = useState(Frame.search);
   const cbSetFrame = useCallback(setFrame, []);
+  const cid = React.useMemo(() => tid++, []);
   return <context.Provider value={{ activeFrame, switch: cbSetFrame }}>
     {activeFrame === Frame.search &&
       <SearchFrame />}
     {activeFrame === Frame.settings &&
-      <SettingsFrame />}
+        <SettingsFrame />}
   </context.Provider>;
 });
