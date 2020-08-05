@@ -11,6 +11,7 @@ export function useSelectionControl(items: DataItem[]) {
   const maxIndex = items.length - 1;
   return {
     selectedIndex,
+    setIndex: useCallback((index: number) => { setSelectedIndex(_ => index); }, []),
     handleUp: useCallback(
       () => {
         if (items.length > 0) {

@@ -3,7 +3,7 @@ import { TextMatch } from 'shared/utils/util-types';
 import { makeStyles } from '@material-ui/styles';
 import { Tooltip, ListItemText, ListItemIcon, ListItem } from '@material-ui/core';
 import { uiConfig } from 'shared/ui-config';
-import { AppImage, ImageFormat } from './image';
+import { AppImage, ImageFormat } from '../image';
 
 const useStyles = makeStyles({
   root: {

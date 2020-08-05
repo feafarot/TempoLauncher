@@ -1,84 +1,28 @@
 import React, { memo, useCallback } from 'react';
-import { makeStyles, Paper, IconButton, createStyles, Box } from '@material-ui/core';
+import { Paper, IconButton, Box } from '@material-ui/core';
 import { QueryInput, QueryInputActionInfo } from './query-input';
-import { ResultsList } from '../results-list';
-import { uiConfig } from '../../../shared/ui-config';
+import { ResultsList } from '../results/results-list';
 import { Configurator } from '../configurator';
-import { useApiAction, useApiListener } from 'renderer/api';
+import { useApiAction, useApiListener, useApiActionAsync } from 'renderer/api';
 import { actions } from 'shared/contracts/actions';
-import { ResultListItem } from '../result-list-item';
+import { ResultListItem } from '../results/result-list-item';
 import { useSelectionControl, useWindowsSizeFix, useQuerying } from './search-frame-hooks';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useRouter, Frame } from '../frame-router';
-import { grey } from '@material-ui/core/colors';
 import { DataItem } from 'shared/contracts/search';
 import { AppImage } from '../image';
 import { KeyCodes } from 'renderer/key-codes';
-
-const useStyles = makeStyles(theme => createStyles({
-  root: {
-    overflow: 'hidden',
-    padding: uiConfig.mainGlowSize
-  },
-  mainFrame: {
-    position: 'fixed',
-    display: 'flex',
-    overflow: 'hidden',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: uiConfig.appWidth - uiConfig.mainGlowSize * 2,
-    minHeight: uiConfig.appIdleHeight - uiConfig.mainGlowSize * 2,
-    maxHeight: uiConfig.appIdleHeight - uiConfig.mainGlowSize * 2,
-    zIndex: 100,
-    '-webkit-app-region': 'drag',
-    boxShadow: `0px 0px ${uiConfig.mainGlowSize}px 0px ${theme.palette.primary.dark}`
-  },
-  settings: {
-    position: 'absolute',
-    top: 1,
-    right: 1,
-    color: grey[800],
-    zIndex: 200,
-    '-webkit-app-region': 'no-drag',
-    '&:hover': {
-      color: theme.palette.primary.light
-    }
-  },
-  query: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'baseline',
-    height: '100%',
-    '-webkit-app-region': 'no-drag',
-    marginLeft: 20
-  },
-  queryPlugin: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'baseline',
-    height: '100%',
-  },
-  queryInput: {
-    flexGrow: 1
-  },
-  pluginImg: {
-    verticalAlign: 'middle'
-  },
-  mathResult: {
-    position: 'absolute',
-    fontSize: '11px',
-    bottom: 6
-  }
-}));
+import { BusyIndicator, useBusyActions } from '../busy';
+import { useSearchFrameStyles } from './search-frame.styles';
 
 function getPluginKey(plugin: DataItem | null) {
   return plugin ? plugin.value : undefined;
 }
 
 export const SearchFrame: React.FC = memo(() => {
-  const classes = useStyles();
+  const classes = useSearchFrameStyles();
+  const { show: showBusy, hide: hideBusy } = useBusyActions();
+
   const { query, activePluginInfo, handleChange, result, setActivePlugin, resetData } = useQuerying();
   const selection = useSelectionControl(result.items);
   const handleChangeWrapped = useCallback(
@@ -98,7 +42,14 @@ export const SearchFrame: React.FC = memo(() => {
   });
   const switchFrame = useRouter();
   const requestMinimize = useApiAction(actions.minimize, () => { });
-  const rebuildIndex = useApiAction(actions.rebuildIndex, () => { });
+  const rebuildIndex = useApiActionAsync(actions.rebuildIndex);
+  const rebuildIndexWrapped = useCallback(
+    async () => {
+      const hide = showBusy();
+      await rebuildIndex();
+      hide();
+    },
+    []);
   const resetDataIfNotCalc = useCallback(
     () => {
       resetData(!!result.calc);
@@ -122,6 +73,11 @@ export const SearchFrame: React.FC = memo(() => {
 
   const launchSelected = useCallback(
     () => {
+      if (result.calc != null) {
+        document.execCommand('copy');
+        return;
+      }
+
       const target = result.items[selection.selectedIndex];
       if (target.isPluginSelector) {
         selectPlugin();
@@ -132,6 +88,14 @@ export const SearchFrame: React.FC = memo(() => {
       requestLaunch({ targetId, queryObj: { query, pluginKey: getPluginKey(activePluginInfo) } });
     },
     [result, activePluginInfo, selection.selectedIndex]);
+
+  const createLaunchByClickHandler = useCallback(
+    (index: number) =>
+      () => {
+        selection.setIndex(index);
+        launchSelected();
+      },
+    [launchSelected]);
 
   function onContainerKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.keyCode) {
@@ -145,7 +109,7 @@ export const SearchFrame: React.FC = memo(() => {
         launchSelected();
         break;
       case KeyCodes.F5:
-        rebuildIndex();
+        rebuildIndexWrapped();
         break;
       case KeyCodes.Esc:
         requestMinimize();
@@ -177,6 +141,7 @@ export const SearchFrame: React.FC = memo(() => {
         <IconButton className={classes.settings} size='small' onClick={() => switchFrame(Frame.settings)}>
           <SettingsIcon fontSize='inherit' />
         </IconButton>
+        <BusyIndicator className={classes.busy} />
       </Paper>
       <ResultsList
         children={result.items.map((x, i) =>
@@ -187,7 +152,7 @@ export const SearchFrame: React.FC = memo(() => {
             matches={x.matches}
             value={x.display}
             helperText={x.secondaryText || x.value}
-            onClick={launchSelected} />)} />
+            onClick={createLaunchByClickHandler(i)} />)} />
     </div>
   </Configurator>;
 });

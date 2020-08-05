@@ -124,7 +124,7 @@
       "request": "attach",
       "port": 9228,
       "webRoot": "${workspaceFolder}",
-      "timeout": 50000,
+      "timeout": 150000,
       //"urlFilter": "*localhost:*"
       //"url": "http://localhost:9080"
     },
