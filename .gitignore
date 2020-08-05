@@ -100,3 +100,4 @@ obj/
 
 .fake
 .ionide/
+.ionide/symbolCache.db

@@ -9,7 +9,7 @@ export class LocalStorage<T> {
   }
 
   get<TKey extends keyof T>(key: TKey): T[TKey] {
-    return this.store.get(key);
+    return this.store.get<TKey>(key)!;
   }
 
   getFullObj() {
@@ -26,5 +26,3 @@ export class LocalStorage<T> {
     return this.store.onDidChange(key, callback);
   }
 }
-
-export type StoreSchema<T> = { [P in keyof T]: Schema };

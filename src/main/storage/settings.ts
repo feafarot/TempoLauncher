@@ -1,5 +1,5 @@
-import Store, { Options } from 'electron-store';
-import { LocalStorage, StoreSchema } from './local-storage-wrapper';
+import Store, { Options, Schema } from 'electron-store';
+import { LocalStorage } from './local-storage-wrapper';
 import { CurrentUserReplacementKey } from 'main/constants';
 import { AppSettings, SettingsSearchPattern } from 'shared/app-settings';
 
@@ -16,7 +16,7 @@ const defaultSettings: AppSettingsStore = {
   launchOnSystemStartup: true
 };
 
-const appSettingsSchema: StoreSchema<AppSettingsStore> = {
+const appSettingsSchema: Schema<AppSettingsStore> = {
   searchPatterns: {
     type: 'array',
     default: defaultSettings.searchPatterns,

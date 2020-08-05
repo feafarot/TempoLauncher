@@ -1,5 +1,5 @@
-import Store, { Options } from 'electron-store';
-import { LocalStorage, StoreSchema } from './local-storage-wrapper';
+import Store, { Options, Schema } from 'electron-store';
+import { LocalStorage } from './local-storage-wrapper';
 
 export interface FileInfo {
   fullPath: string;
@@ -52,7 +52,7 @@ const defaultCache: AppCacheStore = {
   windowLocation: {}
 };
 
-const cacheSchema: StoreSchema<AppCacheStore> = {
+const cacheSchema: Schema<AppCacheStore> = {
   files: {
     type: 'array',
     default: defaultCache.files,
