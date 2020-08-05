@@ -107,6 +107,7 @@ let getIconAsBase64 target =
         |> Option.map convertToBase64
     with
         | :? FileNotFoundException -> None
+        | _ -> None
 
 let getShortcutTarget path =
     File.Exists(path)
