@@ -96,7 +96,7 @@
     "@types/winreg": "^1.2.30",
     "@types/yup": "^0.29.4",
     "cheerio": "^1.0.0-rc.3",
-    "electron": "9.1.2",
+    "electron": "9.3.0",
     "electron-builder": "^22.8.0",
     "electron-webpack": "^2.8.2",
     "electron-webpack-ts": "^4.0.1",
